@@ -1,8 +1,13 @@
 package com.gime.locationsb;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LsbMgr {
 	
 	static LsbMgr lsbMgr;
+	private List<LocationOperation> operationList;
+	
 	
 	public static LsbMgr getInstance()
 	{
@@ -13,7 +18,14 @@ public class LsbMgr {
 		return lsbMgr;
 	}
 	
-	
-	public int currLocationType;
+	LsbMgr()
+	{
+		operationList = new ArrayList<LocationOperation>();
+	}
+
+	public List getOperaionList()
+	{
+		return operationList;
+	}
 
 }

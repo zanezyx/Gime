@@ -38,14 +38,17 @@
         android:text="@string/start_location" />
 
     <TextView
+        android:id="@+id/tvlocationStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/location_result" />
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp" >
+
+    </FrameLayout>
 
 </LinearLayout>
