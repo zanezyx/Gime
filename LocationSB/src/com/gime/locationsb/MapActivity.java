@@ -11,6 +11,7 @@ import com.baidu.mapapi.model.LatLng;
 
 import android.support.v4.app.Fragment;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +27,8 @@ public class MapActivity extends Activity {
 
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;	
+	private double latitude;
+	private double longitude;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,9 +37,13 @@ public class MapActivity extends Activity {
 				WindowManager.LayoutParams. FLAG_FULLSCREEN);
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_map);
+		Intent intent = getIntent();
+		latitude = (double)intent.getDoubleExtra("latitude", -1);
+		longitude = (double)intent.getDoubleExtra("longitude", -1);
 		initView();
 	}
-
+	
+	
 	void initView() {
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();  
@@ -47,14 +54,17 @@ public class MapActivity extends Activity {
 //	    .draggable(true);  //设置手势拖拽
 //		//将marker添加到地图上
 //		marker = (Marker) (mBaiduMap.addOverlay(options));
-		startLocation(null);
+		if(latitude!=-1 && longitude!=-1)
+		{
+			showLocation();
+		}
 	}
 
 	
-	public void startLocation(View v) {
+	public void showLocation() {
 
 		//定义Maker坐标点  
-		LatLng point = new LatLng(39.963175, 116.400244);  
+		LatLng point = new LatLng(latitude, longitude);  
 		//构建Marker图标  
 		BitmapDescriptor bitmap = BitmapDescriptorFactory  
 		    .fromResource(R.drawable.icon_marker);  

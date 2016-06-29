@@ -9,5 +9,13 @@
     <string name="input_wenhou">请输入问候语，编辑得迷惑性一点</string>
     <string name="start_location">发送指令，开始定位</string>
     <string name="location_result">查询定位结果（地图上对方的位置）</string>
-
+    <string name="input_correct_phone">请输入正确的手机号码</string>
+    <string name="input_wenhou1">请输入问候语</string>
+    <string name="location_wait">正在定位，请稍候</string>
+    <string name="location_suscess">定位成功,点击查看</string>
+    <string name="location_repeat">该号码已添加定位，请勿重复添加</string>
+    <string name="phone">手机号</string>
+    <string name="wechat">微信号</string>
+    <string name="please_wait">定位还没有成功，请稍候</string>
+    
 </resources>

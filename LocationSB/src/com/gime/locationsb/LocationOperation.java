@@ -6,6 +6,7 @@ public class LocationOperation {
 	private int locationStatus;
 	private String phoneNumber;
 	private String wechat;
+	private String wenhou;
 	private String imei;
 	private double latitude;
 	private double longitude;
@@ -33,6 +34,12 @@ public class LocationOperation {
 	}
 	public void setWechat(String wechat) {
 		this.wechat = wechat;
+	}
+	public String getWenhou() {
+		return wenhou;
+	}
+	public void setWenhou(String wenhou) {
+		this.wenhou = wenhou;
 	}
 	public String getImei() {
 		return imei;
