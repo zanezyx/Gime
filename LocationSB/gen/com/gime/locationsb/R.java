@@ -55,6 +55,7 @@ public final class R {
         public static final int location_result=0x7f050007;
         public static final int location_suscess=0x7f05000b;
         public static final int location_wait=0x7f05000a;
+        public static final int net_fail=0x7f050010;
         public static final int phone=0x7f05000d;
         public static final int please_wait=0x7f05000f;
         public static final int start_location=0x7f050006;

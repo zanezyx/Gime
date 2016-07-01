@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
@@ -15,9 +18,13 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 
 import android.support.v4.app.Fragment;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,9 +32,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -41,7 +50,8 @@ public class MainActivity extends Activity {
 	private ListView mListView;
 	private EditText et1;
 	private EditText et2;
-
+	private LsbNetworkThread netThread = null;
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -49,8 +59,29 @@ public class MainActivity extends Activity {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_main);
 		initView();
+		
 	}
 
+	private Handler mHandler = new Handler() {
+		@SuppressLint("NewApi")
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case LsbConst.MSG_RECEIVE_LOCATION:
+				Log.i(LsbConst.LOG_TAG, "mHandler receive MSG_RECEIVE_LOCATION msg");
+				LocationOperation op = (LocationOperation)msg.obj;
+				LsbMgr.getInstance().completeOperation(op);
+				refreshListView();
+				break;
+			case LsbConst.MSG_QUERY_LOCATION_NET_FAIL:
+			case LsbConst.MSG_ADD_LOCATION_NET_FAIL:
+				Toast.makeText(getApplicationContext(), getResources().getString(R.string.net_fail),
+						Toast.LENGTH_SHORT).show();
+				break;
+			}
+			super.handleMessage(msg);
+		}
+	};
+	
 	
 	void initView() {
 
@@ -58,6 +89,7 @@ public class MainActivity extends Activity {
 		mListView = (ListView)findViewById(R.id.listView1);
 		et1 = (EditText)findViewById(R.id.et1);
 		et2 = (EditText)findViewById(R.id.et2);
+		et1.clearFocus();
 		mAdapter = new SimpleAdapter(this, getData(), R.layout.list_item,
 				new String[] { "target", "status"}, new int[] {
 						R.id.tvTarget, R.id.tvStatus });
@@ -149,11 +181,10 @@ public class MainActivity extends Activity {
 		
 		if(!LsbMgr.getInstance().checkIfContainOperation(op))
 		{
+			
 			LsbMgr.getInstance().addLocationOperation(op);
-			mAdapter = new SimpleAdapter(this, getData(), R.layout.list_item,
-					new String[] { "target", "status" }, new int[] { R.id.tvTarget,
-							R.id.tvStatus });
-			mListView.setAdapter(mAdapter);
+			sendLocationRequest(op);
+			refreshListView();
 		}else{
 			Toast.makeText(getApplicationContext(), getResources().getString(R.string.location_repeat),
 					Toast.LENGTH_SHORT).show();
@@ -161,7 +192,39 @@ public class MainActivity extends Activity {
 
 	}
 
+	private void refreshListView()
+	{
+		mAdapter = new SimpleAdapter(this, getData(), R.layout.list_item,
+				new String[] { "target", "status" }, new int[] { R.id.tvTarget,
+						R.id.tvStatus });
+		mListView.setAdapter(mAdapter);
+	}
 	
+	private void sendLocationRequest(LocationOperation op)
+	{
+		if(netThread==null)
+		{
+			netThread = new LsbNetworkThread(this, mHandler);
+			netThread.start();
+		}
+		JSONObject jop = new JSONObject();
+		try {
+			jop.put("imei", op.getImei());
+			jop.put("type", op.getLocationType());
+			if(op.getLocationType()==LsbConst.LOCATION_TYPE_PHONE)
+			{
+				jop.put("number", op.getPhoneNumber());
+			}else{
+				jop.put("number", op.getWechat());
+			}
+			jop.put("wenhou", op.getWenhou());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		netThread.setCurrNetRequestType(LsbConst.NET_REQUEST_SEND_OP);
+		netThread.setjObjOperation(jop);
+	}
 	
 	@Override
 	protected void onDestroy() {
@@ -172,13 +235,15 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		netThread = new LsbNetworkThread(this, mHandler);
+		netThread.start();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-
+		netThread.setEnableRun(false);
+		netThread = null;
 	}
 
 }

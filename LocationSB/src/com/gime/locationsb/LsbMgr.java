@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 public class LsbMgr {
 	
@@ -78,4 +79,74 @@ public class LsbMgr {
 		return imei;
 	}
 
+	public boolean hasOperation()
+	{
+		if(operationList!=null)
+		{
+			if(operationList.size()>0)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	public boolean hasUncompletedOperation()
+	{
+		int count = 0;
+		if(operationList!=null)
+		{
+			for(LocationOperation op:operationList)
+			{
+				if(op.getLocationStatus()==LsbConst.LOCATION_STATE_LOCATION_WAIT)
+				{
+					count++;
+				}
+			}
+		}
+		if(count>0)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	
+	public boolean completeOperation(LocationOperation op)
+	{
+		boolean res = false;
+		if(operationList!=null)
+		{
+			for(LocationOperation operation:operationList)
+			{
+				if(op.getLocationType()==operation.getLocationType())
+				{
+					if(op.getLocationType()==LsbConst.LOCATION_TYPE_PHONE)
+					{
+						if(op.getPhoneNumber().equals(operation.getPhoneNumber()))
+						{
+							operation.setLatitude(op.getLatitude());
+							operation.setLongitude(op.getLongitude());
+							operation.setLocationStatus(LsbConst.LOCATION_STATE_SUCCESS);
+							res = true;
+						}
+					}else{
+						if(op.getWechat().equals(operation.getWechat()))
+						{
+							operation.setLatitude(op.getLatitude());
+							operation.setLongitude(op.getLongitude());
+							operation.setLocationStatus(LsbConst.LOCATION_STATE_SUCCESS);
+							res = true;
+						}
+					}
+				}
+			}	
+		}
+		if(!res)
+		{
+			Log.i(LsbConst.LOG_TAG, "complete operation error!");
+		}
+		return res;
+	}
 }

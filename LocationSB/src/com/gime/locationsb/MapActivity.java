@@ -40,6 +40,10 @@ public class MapActivity extends Activity {
 		Intent intent = getIntent();
 		latitude = (double)intent.getDoubleExtra("latitude", -1);
 		longitude = (double)intent.getDoubleExtra("longitude", -1);
+		if(latitude==-1 || longitude==-1)
+		{
+			//finish();
+		}
 		initView();
 	}
 	

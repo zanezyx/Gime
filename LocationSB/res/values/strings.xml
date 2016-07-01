@@ -17,5 +17,6 @@
     <string name="phone">手机号</string>
     <string name="wechat">微信号</string>
     <string name="please_wait">定位还没有成功，请稍候</string>
+    <string name="net_fail">网络连接失败</string>
     
 </resources>
