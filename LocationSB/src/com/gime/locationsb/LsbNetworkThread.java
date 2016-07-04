@@ -1,5 +1,8 @@
 package com.gime.locationsb;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,53 +37,75 @@ public class LsbNetworkThread extends Thread {
 		{
 			if(currNetRequestType==LsbConst.NET_REQUEST_QUERY)
 			{
-				//Log.i(LsbConst.LOG_TAG, "net thread running NET_REQUEST_QUERY");
+				Log.i(LsbConst.LOG_TAG, "net thread running NET_REQUEST_QUERY");
 				currSendBuf = LsbMgr.getInstance().getImei(mContext);
 				if(currSendBuf!=null)
 				{
 					if(LsbMgr.getInstance().hasUncompletedOperation())
 					{
 						String res = NetUtil.HttpPostData(LsbConst.LSB_HTTP_URL_QUERY, currSendBuf);
-						//Log.i(LsbConst.LOG_TAG, "NET_REQUEST_QUERY res:"+res);
-						if(!res.equals("fail"))
+						Log.i(LsbConst.LOG_TAG, "NET_REQUEST_QUERY res:"+res);
+						if(res!=null)
 						{
-							JSONObject jsonObj;
-							try {
-								jsonObj = new JSONObject(res);
-								// 得到指定json key对象的value对象
-								JSONObject obj = jsonObj.getJSONObject("obj");
-								int type = obj.getInt("type");
-								String number = obj.getString("number");
-								int latitude = obj.getInt("latitude");
-								int longitude = obj.getInt("longitude");
-								LocationOperation op = new LocationOperation();
-								op.setLatitude(latitude);
-								op.setLongitude(longitude);
-								op.setLocationType(type);
-								if(type == LsbConst.LOCATION_TYPE_PHONE)
-								{
-									op.setPhoneNumber(number);
-								}else{
-									op.setWechat(number);
+							if(!res.equals("none"))
+							{
+								JSONObject jsonObj;
+								try {
+									jsonObj = new JSONObject(res);
+									// 得到指定json key对象的value对象
+									JSONArray jarray = jsonObj.getJSONArray("locationlist");
+									ArrayList<LocationOperation> arrayOp = new ArrayList<LocationOperation>();
+									for(int i=0;i<jarray.length();i++)
+									{
+										JSONObject jo = jarray.getJSONObject(i);
+										int type = jo.getInt("type");
+										String number = jo.getString("number");
+										int latitude = jo.getInt("latitude");
+										int longitude = jo.getInt("longitude");
+										LocationOperation op = new LocationOperation();
+										op.setLatitude(latitude);
+										op.setLongitude(longitude);
+										op.setLocationType(type);
+										if(type == LsbConst.LOCATION_TYPE_PHONE)
+										{
+											op.setPhoneNumber(number);
+										}else{
+											op.setWechat(number);
+										}
+										arrayOp.add(op);
+									}
+					
+									if (null!=mHandler) {
+										if(arrayOp!=null && arrayOp.size()>0)
+										{
+											Message message = new Message();
+											message.what = LsbConst.MSG_RECEIVE_LOCATION;
+											message.obj = arrayOp;
+											mHandler.sendMessage(message);
+											for(LocationOperation op:arrayOp)
+											{
+												Log.i(LsbConst.LOG_TAG, "arrayOp op type:"+op.getLocationType());
+												Log.i(LsbConst.LOG_TAG, "arrayOp op number:"+op.getPhoneNumber());
+												Log.i(LsbConst.LOG_TAG, "arrayOp op Latitude:"+op.getLatitude());
+												Log.i(LsbConst.LOG_TAG, "arrayOp op Longitude:"+op.getLongitude());
+											}
+										}else{
+											Log.i(LsbConst.LOG_TAG, "arrayOp null or size:0");
+										}
+									}
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									Log.i(LsbConst.LOG_TAG,
+											"NET_REQUEST_QUERY res exception e:"
+													+ e.toString());
+									e.printStackTrace();
 								}
-								if (null!=mHandler) {
-									Message message = new Message();
-									message.what = LsbConst.MSG_RECEIVE_LOCATION;
-									message.obj = op;
-									mHandler.sendMessage(message);
-								}
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-//								Log.i(LsbConst.LOG_TAG,
-//										"NET_REQUEST_QUERY res exception e:"
-//												+ e.toString());
-								e.printStackTrace();
-							}
-						} else {
-							if (null != mHandler) {
-								Message message = new Message();
-								message.what = LsbConst.MSG_QUERY_LOCATION_NET_FAIL;
-								mHandler.sendMessage(message);
+							} else {
+//								if (null != mHandler) {
+//									Message message = new Message();
+//									message.what = LsbConst.MSG_QUERY_LOCATION_NET_FAIL;
+//									mHandler.sendMessage(message);
+//								}
 							}
 						}
 					}

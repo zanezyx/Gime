@@ -146,6 +146,8 @@ public class LsbMgr {
 		if(!res)
 		{
 			Log.i(LsbConst.LOG_TAG, "complete operation error!");
+		}else{
+			Log.i(LsbConst.LOG_TAG, "complete operation success!");
 		}
 		return res;
 	}

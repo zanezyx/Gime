@@ -68,8 +68,11 @@ public class MainActivity extends Activity {
 			switch (msg.what) {
 			case LsbConst.MSG_RECEIVE_LOCATION:
 				Log.i(LsbConst.LOG_TAG, "mHandler receive MSG_RECEIVE_LOCATION msg");
-				LocationOperation op = (LocationOperation)msg.obj;
-				LsbMgr.getInstance().completeOperation(op);
+				ArrayList<LocationOperation> opList = (ArrayList<LocationOperation>)msg.obj;
+				for(LocationOperation op:opList)
+				{
+					LsbMgr.getInstance().completeOperation(op);
+				}
 				refreshListView();
 				break;
 			case LsbConst.MSG_QUERY_LOCATION_NET_FAIL:
