@@ -77,6 +77,13 @@ public class MainActivity extends Activity {
 				Toast.makeText(getApplicationContext(), getResources().getString(R.string.net_fail),
 						Toast.LENGTH_SHORT).show();
 				break;
+			case LsbConst.MSG_ADD_LOCATION_NET_SUCCESS:
+
+				break;
+			case LsbConst.MSG_ADD_LOCATION_NET_EXIST:
+				Toast.makeText(getApplicationContext(), getResources().getString(R.string.location_repeat),
+						Toast.LENGTH_SHORT).show();
+				break;
 			}
 			super.handleMessage(msg);
 		}

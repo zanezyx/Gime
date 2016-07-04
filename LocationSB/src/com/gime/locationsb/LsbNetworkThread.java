@@ -34,14 +34,14 @@ public class LsbNetworkThread extends Thread {
 		{
 			if(currNetRequestType==LsbConst.NET_REQUEST_QUERY)
 			{
-				Log.i(LsbConst.LOG_TAG, "net thread running NET_REQUEST_QUERY");
+				//Log.i(LsbConst.LOG_TAG, "net thread running NET_REQUEST_QUERY");
 				currSendBuf = LsbMgr.getInstance().getImei(mContext);
 				if(currSendBuf!=null)
 				{
 					if(LsbMgr.getInstance().hasUncompletedOperation())
 					{
 						String res = NetUtil.HttpPostData(LsbConst.LSB_HTTP_URL_QUERY, currSendBuf);
-						Log.i(LsbConst.LOG_TAG, "NET_REQUEST_QUERY res:"+res);
+						//Log.i(LsbConst.LOG_TAG, "NET_REQUEST_QUERY res:"+res);
 						if(!res.equals("fail"))
 						{
 							JSONObject jsonObj;
@@ -71,9 +71,9 @@ public class LsbNetworkThread extends Thread {
 								}
 							} catch (JSONException e) {
 								// TODO Auto-generated catch block
-								Log.i(LsbConst.LOG_TAG,
-										"NET_REQUEST_QUERY res exception e:"
-												+ e.toString());
+//								Log.i(LsbConst.LOG_TAG,
+//										"NET_REQUEST_QUERY res exception e:"
+//												+ e.toString());
 								e.printStackTrace();
 							}
 						} else {
@@ -92,14 +92,32 @@ public class LsbNetworkThread extends Thread {
 				{
 					String res = NetUtil.HttpPostData(LsbConst.LSB_HTTP_URL_SEND_OP, jObjOperation.toString());
 					Log.i(LsbConst.LOG_TAG, "NET_REQUEST_SEND_OP res:"+res);
-					if(res.equals("fail"))
+					if(res!=null)
 					{
-						if (null!=mHandler) {
-							Message message = new Message();
-							message.what = LsbConst.MSG_ADD_LOCATION_NET_FAIL;
-							mHandler.sendMessage(message);
+						if(res.equals("fail"))
+						{
+							if (null!=mHandler) {
+								Message message = new Message();
+								message.what = LsbConst.MSG_ADD_LOCATION_NET_FAIL;
+								mHandler.sendMessage(message);
+							}
+						}else if(res.equals("exist"))
+						{
+							if (null!=mHandler) {
+								Message message = new Message();
+								message.what = LsbConst.MSG_ADD_LOCATION_NET_EXIST;
+								mHandler.sendMessage(message);
+							}
+						}else if(res.equals("success"))
+						{
+							if (null!=mHandler) {
+								Message message = new Message();
+								message.what = LsbConst.MSG_ADD_LOCATION_NET_SUCCESS;
+								mHandler.sendMessage(message);
+							}
 						}
 					}
+
 				}
 				if(LsbMgr.getInstance().hasUncompletedOperation())
 				{
