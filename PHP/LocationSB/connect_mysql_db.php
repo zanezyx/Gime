@@ -2,11 +2,11 @@
 <?php
 $mysql_server_name = "localhost";
 
-$mysql_username = "root";
+$mysql_username = "gime";
 
-$mysql_password = "root";
+$mysql_password = "gime";
 
-$mysql_database = "balilai";
+$mysql_database = "location";
 
 $conn = mysql_connect($mysql_server_name, $mysql_username, $mysql_password);
 

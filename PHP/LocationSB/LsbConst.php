@@ -1,0 +1,8 @@
+<?php
+
+define("LOCATION_STATE_LOCATION_WAIT", 1);
+define("LOCATION_STATE_SUCCESS", 2);
+
+
+
+?>
