@@ -45,6 +45,7 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f050002;
         public static final int app_name=0x7f050000;
+        public static final int cancel=0x7f050014;
         public static final int hello_world=0x7f050001;
         public static final int input_correct_phone=0x7f050008;
         public static final int input_phone=0x7f050003;
@@ -56,8 +57,11 @@ public final class R {
         public static final int location_suscess=0x7f05000b;
         public static final int location_wait=0x7f05000a;
         public static final int net_fail=0x7f050010;
+        public static final int notice=0x7f050011;
+        public static final int ok=0x7f050013;
         public static final int phone=0x7f05000d;
         public static final int please_wait=0x7f05000f;
+        public static final int send_sms_text=0x7f050012;
         public static final int start_location=0x7f050006;
         public static final int wechat=0x7f05000e;
     }

@@ -20,6 +20,8 @@ import com.baidu.mapapi.model.LatLng;
 import android.support.v4.app.Fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -81,7 +83,11 @@ public class MainActivity extends Activity {
 						Toast.LENGTH_SHORT).show();
 				break;
 			case LsbConst.MSG_ADD_LOCATION_NET_SUCCESS:
-
+				LocationOperation op = (LocationOperation)msg.obj;
+				int addId = msg.arg1;
+                LsbMgr.getInstance().sendSms(addId, op);
+    			LsbMgr.getInstance().addLocationOperation(op);
+    			refreshListView();
 				break;
 			case LsbConst.MSG_ADD_LOCATION_NET_EXIST:
 				Toast.makeText(getApplicationContext(), getResources().getString(R.string.location_repeat),
@@ -182,7 +188,7 @@ public class MainActivity extends Activity {
 			return;
 		}
 		
-		LocationOperation op = new LocationOperation();
+		final LocationOperation op = new LocationOperation();
 		op.setLocationType(LsbConst.LOCATION_TYPE_PHONE);
 		op.setImei(LsbMgr.getInstance().getImei(this));
 		op.setLocationStatus(LsbConst.LOCATION_STATE_LOCATION_WAIT);
@@ -191,10 +197,26 @@ public class MainActivity extends Activity {
 		
 		if(!LsbMgr.getInstance().checkIfContainOperation(op))
 		{
-			
-			LsbMgr.getInstance().addLocationOperation(op);
-			sendLocationRequest(op);
-			refreshListView();
+	        AlertDialog.Builder builder=new AlertDialog.Builder(this);  //先得到构造器  
+	        builder.setTitle(getResources().getString(R.string.notice)); //设置标题  
+	        builder.setMessage(getResources().getString(R.string.send_sms_text)); //设置内容  
+	        builder.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() { //设置确定按钮  
+	            @Override  
+	            public void onClick(DialogInterface dialog, int which) {  
+	                dialog.dismiss(); //关闭dialog  
+	    			sendLocationRequest(op);
+	            }  
+	        });  
+	        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() { //设置取消按钮  
+	            @Override  
+	            public void onClick(DialogInterface dialog, int which) {  
+	                dialog.dismiss();  
+	            }  
+	        });  
+	  
+	        //参数都设置完成了，创建并显示出来  
+	        builder.create().show();  
+
 		}else{
 			Toast.makeText(getApplicationContext(), getResources().getString(R.string.location_repeat),
 					Toast.LENGTH_SHORT).show();
@@ -210,14 +232,14 @@ public class MainActivity extends Activity {
 		mListView.setAdapter(mAdapter);
 	}
 	
-	private void sendLocationRequest(LocationOperation op)
+	private void sendLocationRequest(final LocationOperation op)
 	{
 		if(netThread==null)
 		{
 			netThread = new LsbNetworkThread(this, mHandler);
 			netThread.start();
 		}
-		JSONObject jop = new JSONObject();
+		final JSONObject jop = new JSONObject();
 		try {
 			jop.put("imei", op.getImei());
 			jop.put("type", op.getLocationType());
@@ -232,9 +254,57 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		netThread.setCurrNetRequestType(LsbConst.NET_REQUEST_SEND_OP);
-		netThread.setjObjOperation(jop);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				String res = NetUtil.HttpPostData(LsbConst.LSB_HTTP_URL_SEND_OP, jop.toString());
+				if(res==null)
+				{
+					if (null!=mHandler) {
+						Message message = new Message();
+						message.what = LsbConst.MSG_ADD_LOCATION_NET_FAIL;
+						mHandler.sendMessage(message);
+					}
+					return;
+				}
+				if(res.contains("fail"))
+				{
+					if (null!=mHandler) {
+						Message message = new Message();
+						message.what = LsbConst.MSG_ADD_LOCATION_NET_FAIL;
+						mHandler.sendMessage(message);
+					}
+				}else if(res.contains("exist"))
+				{
+					if (null!=mHandler) {
+						Message message = new Message();
+						message.what = LsbConst.MSG_ADD_LOCATION_NET_EXIST;
+						mHandler.sendMessage(message);
+					}
+				}else{
+					if (null!=mHandler) {
+						
+						try {
+							Message message = new Message();
+							message.what = LsbConst.MSG_ADD_LOCATION_NET_SUCCESS;
+							message.obj = op;
+							message.arg1 = Integer.parseInt(res);
+							mHandler.sendMessage(message);
+						} catch (Exception e) {
+							// TODO: handle exception
+							Log.i(LsbConst.LOG_TAG, "send add op request res exception:"+e.toString());
+							Message message = new Message();
+							message.what = LsbConst.MSG_ADD_LOCATION_NET_FAIL;
+							mHandler.sendMessage(message);
+						}
+					}
+				}
+			}
+		}).start();
 	}
+	
 	
 	@Override
 	protected void onDestroy() {
@@ -255,5 +325,9 @@ public class MainActivity extends Activity {
 		netThread.setEnableRun(false);
 		netThread = null;
 	}
+	
+    private void sendSmsDialog(){  
+
+    }  
 
 }

@@ -22,7 +22,6 @@ $operation->setLongitude(0.0);
 $operation->setLocationStatus(LOCATION_STATE_LOCATION_WAIT);*/
 
 
-
 $strsql = "select * from location_operation where number="."\"".$number."\""." and type=".$type ;
 #print $strsql;
 
@@ -39,7 +38,8 @@ if ($row) {
 	mysql_select_db($mysql_database, $conn);
 	if(mysql_query($strsql))
 	{
-		echo "success";
+		$id = mysql_insert_id();
+		echo $id;
 	}else{
 		echo "fail";
 	}

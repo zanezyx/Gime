@@ -51,6 +51,10 @@ public class NetUtil {
 				// String version = obj.getString("version");
 				// System.out.println(rev+"333333333");
 				res =  EntityUtils.toString(response.getEntity());
+				res.trim();
+				res = res.replaceAll("\r|\n", "");
+				res = res.replaceAll(" ", "");
+				res = res.replaceAll("	", "");
 				//Log.i(LsbConst.LOG_TAG, "res:" + res);	
 				return res;
 			}
