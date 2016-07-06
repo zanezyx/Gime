@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +41,7 @@ public class MapActivity extends Activity {
 		Intent intent = getIntent();
 		latitude = (double)intent.getDoubleExtra("latitude", -1);
 		longitude = (double)intent.getDoubleExtra("longitude", -1);
+		Log.i(LsbConst.LOG_TAG, "latitude:"+latitude+"  longitude:"+longitude);
 		if(latitude==-1 || longitude==-1)
 		{
 			//finish();
