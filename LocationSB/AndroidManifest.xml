@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.gime.locationsb.MapActivity" 
+            android:name="com.gime.locationsb.LsbMapActivity" 
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:configChanges="orientation|keyboardHidden">
         </activity>

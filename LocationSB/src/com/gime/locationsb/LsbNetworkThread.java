@@ -60,8 +60,8 @@ public class LsbNetworkThread extends Thread {
 										JSONObject jo = jarray.getJSONObject(i);
 										int type = jo.getInt("type");
 										String number = jo.getString("number");
-										int latitude = jo.getInt("latitude");
-										int longitude = jo.getInt("longitude");
+										double latitude = jo.getDouble("latitude");
+										double longitude = jo.getDouble("longitude");
 										LocationOperation op = new LocationOperation();
 										op.setLatitude(latitude);
 										op.setLongitude(longitude);

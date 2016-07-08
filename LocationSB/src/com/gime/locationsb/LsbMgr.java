@@ -133,6 +133,8 @@ public class LsbMgr {
 							if(op.getLatitude()!=0 && op.getLongitude()!=0
 									&& op.getLocationStatus()!=LsbConst.LOCATION_STATE_SUCCESS)
 							{
+								Log.i(LsbConst.LOG_TAG, "completeOperation latitude:"+op.getLatitude()
+										+" longitude:"+op.getLongitude());
 								operation.setLatitude(op.getLatitude());
 								operation.setLongitude(op.getLongitude());
 								operation.setLocationStatus(LsbConst.LOCATION_STATE_SUCCESS);

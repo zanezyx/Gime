@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		initView();
 		
@@ -120,9 +121,11 @@ public class MainActivity extends Activity {
 				LocationOperation op = (LocationOperation)opList.get(arg2);
 				if(op.getLocationStatus()==LsbConst.LOCATION_STATE_SUCCESS)
 				{
-					Intent intent = new Intent(MainActivity.this, MapActivity.class);
+					Intent intent = new Intent(MainActivity.this, LsbMapActivity.class);
 					intent.putExtra("latitude", op.getLatitude());
 					intent.putExtra("longitude", op.getLongitude());
+//					intent.putExtra("latitude", 22.526411);
+//					intent.putExtra("longitude", 113.936918);
 					startActivity(intent);
 				}else{
 					Toast.makeText(getApplicationContext(), getResources().getString(R.string.please_wait),
