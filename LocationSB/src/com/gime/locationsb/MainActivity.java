@@ -126,6 +126,8 @@ public class MainActivity extends Activity {
 		etPhone = (EditText)findViewById(R.id.et1);
 		etSmsContent = (EditText)findViewById(R.id.et2);
 		etPhone.clearFocus();
+		etWechat = (EditText)findViewById(R.id.et11);
+		etWechatContent = (EditText)findViewById(R.id.et21);
 		mAdapter = new SimpleAdapter(this, getData(), R.layout.list_item,
 				new String[] { "target", "status"}, new int[] {
 						R.id.tvTarget, R.id.tvStatus });
