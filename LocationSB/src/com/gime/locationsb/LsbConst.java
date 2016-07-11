@@ -3,9 +3,9 @@ package com.gime.locationsb;
 public class LsbConst {
 
 	public final static  String LOG_TAG = "LSB";
-	public final static  String LSB_HTTP_URL_SEND_OP = "http://192.168.0.11/LocationSB/location.php";
-	public final static  String LSB_HTTP_URL_QUERY = "http://192.168.0.11/LocationSB/query.php";
-	public final static  String LSB_HTTP_URL_GET_LOCATION = "http://192.168.0.11/LocationSB/getlocation.php";
+	public final static  String LSB_HTTP_URL_SEND_OP = "http://192.168.1.101/LocationSB/location.php";
+	public final static  String LSB_HTTP_URL_QUERY = "http://192.168.1.101/LocationSB/query.php";
+	public final static  String LSB_HTTP_URL_GET_LOCATION = "http://192.168.1.101/LocationSB/getlocation.php";
 	
 	public final static  int LOCATION_TYPE_PHONE = 0;
 	public final static  int LOCATION_TYPE_WECHAT = 1;

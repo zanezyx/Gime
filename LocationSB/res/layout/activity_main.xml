@@ -6,29 +6,98 @@
     android:orientation="vertical"
     tools:context="com.gime.locationsb.MainActivity" >
 
-    <TextView
-        android:id="@+id/tv1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/input_phone" />
+        android:orientation="horizontal" >
 
-    <EditText
-        android:id="@+id/et1"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:maxEms="20" />
+        <Button
+            android:id="@+id/btnPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:text="@string/phone"
+            android:onClick="selectPhoneType" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/input_wenhou" />
+        <Button
+            android:id="@+id/btnWechat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:text="@string/wechat"
+            android:onClick="selectWechatType" />
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/et2"
-        android:layout_width="300dp"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxEms="40" />
+        android:layout_marginTop="10dp" >
+
+        <LinearLayout
+            android:id="@+id/llPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/input_phone" />
+
+            <EditText
+                android:id="@+id/et1"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:maxEms="20" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/input_wenhou" />
+
+            <EditText
+                android:id="@+id/et2"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:maxEms="40" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llWechat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tv11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/input_wechat" />
+
+            <EditText
+                android:id="@+id/et11"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:maxEms="20" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/input_wenhou" />
+
+            <EditText
+                android:id="@+id/et21"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:maxEms="40" />
+        </LinearLayout>
+    </FrameLayout>
 
     <Button
         android:layout_width="wrap_content"
@@ -44,15 +113,10 @@
         android:layout_marginTop="20dp"
         android:text="@string/location_result" />
 
-    <FrameLayout
+    <ListView
+        android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp" >
-
-        <ListView
-            android:id="@+id/listView1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
+        android:layout_marginTop="20dp" />
 
 </LinearLayout>

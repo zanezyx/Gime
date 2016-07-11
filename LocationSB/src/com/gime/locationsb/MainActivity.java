@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -37,8 +38,10 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -50,9 +53,18 @@ public class MainActivity extends Activity {
 	private TextView tvLocationStatus = null;
 	private SimpleAdapter mAdapter;
 	private ListView mListView;
-	private EditText et1;
-	private EditText et2;
+	private EditText etPhone;
+	private EditText etSmsContent;
 	private LsbNetworkThread netThread = null;
+	private EditText etWechat;
+	private EditText etWechatContent;
+	
+	private Button btnPhone;
+	private Button btnWechat;
+	
+	private LinearLayout llPhone;
+	private LinearLayout llWechat;
+	
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -102,11 +114,18 @@ public class MainActivity extends Activity {
 	
 	void initView() {
 
+		btnPhone = (Button)findViewById(R.id.btnPhone);
+		btnWechat = (Button)findViewById(R.id.btnWechat);
+		
+		llPhone = (LinearLayout)findViewById(R.id.llPhone);
+		llWechat = (LinearLayout)findViewById(R.id.llWechat);
+		
+		selectWechatType(null);
 		tvLocationStatus = (TextView) findViewById(R.id.tvlocationStatus);
 		mListView = (ListView)findViewById(R.id.listView1);
-		et1 = (EditText)findViewById(R.id.et1);
-		et2 = (EditText)findViewById(R.id.et2);
-		et1.clearFocus();
+		etPhone = (EditText)findViewById(R.id.et1);
+		etSmsContent = (EditText)findViewById(R.id.et2);
+		etPhone.clearFocus();
 		mAdapter = new SimpleAdapter(this, getData(), R.layout.list_item,
 				new String[] { "target", "status"}, new int[] {
 						R.id.tvTarget, R.id.tvStatus });
@@ -169,8 +188,8 @@ public class MainActivity extends Activity {
 	
 	public void addLocationOperation(View v) {
 
-		String phone = et1.getText().toString();
-		String wenhou = et2.getText().toString();
+		String phone = etPhone.getText().toString();
+		String wenhou = etSmsContent.getText().toString();
 		if(phone==null || phone.equals(""))
 		{
 			Toast.makeText(getApplicationContext(), getResources().getString(R.string.input_phone),
@@ -200,24 +219,24 @@ public class MainActivity extends Activity {
 		
 		if(!LsbMgr.getInstance().checkIfContainOperation(op))
 		{
-	        AlertDialog.Builder builder=new AlertDialog.Builder(this);  //先得到构造器  
-	        builder.setTitle(getResources().getString(R.string.notice)); //设置标题  
-	        builder.setMessage(getResources().getString(R.string.send_sms_text)); //设置内容  
-	        builder.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() { //设置确定按钮  
+	        AlertDialog.Builder builder=new AlertDialog.Builder(this);  //���寰���版��������  
+	        builder.setTitle(getResources().getString(R.string.notice)); //璁剧疆���棰�  
+	        builder.setMessage(getResources().getString(R.string.send_sms_text)); //璁剧疆���瀹�  
+	        builder.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() { //璁剧疆纭�瀹�������  
 	            @Override  
 	            public void onClick(DialogInterface dialog, int which) {  
-	                dialog.dismiss(); //关闭dialog  
+	                dialog.dismiss(); //��抽��dialog  
 	    			sendLocationRequest(op);
 	            }  
 	        });  
-	        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() { //设置取消按钮  
+	        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() { //璁剧疆���娑�������  
 	            @Override  
 	            public void onClick(DialogInterface dialog, int which) {  
 	                dialog.dismiss();  
 	            }  
 	        });  
 	  
-	        //参数都设置完成了，创建并显示出来  
+	        //�����伴�借�剧疆瀹����浜�锛����寤哄苟��剧ず��烘��  
 	        builder.create().show();  
 
 		}else{
@@ -263,6 +282,7 @@ public class MainActivity extends Activity {
 			public void run() {
 				// TODO Auto-generated method stub
 				String res = NetUtil.HttpPostData(LsbConst.LSB_HTTP_URL_SEND_OP, jop.toString());
+				Log.i(LsbConst.LOG_TAG, "LSB_HTTP_URL_SEND_OP res:"+res);
 				if(res==null)
 				{
 					if (null!=mHandler) {
@@ -332,5 +352,26 @@ public class MainActivity extends Activity {
     private void sendSmsDialog(){  
 
     }  
+    
+    
+    public void selectPhoneType(View v)
+    {
+    	LsbMgr.getInstance().setCurrLactionType(LsbConst.LOCATION_TYPE_PHONE);
+    	btnPhone.setTextColor(Color.WHITE);
+    	btnWechat.setTextColor(Color.GRAY);
+    	llWechat.setVisibility(View.INVISIBLE);
+    	llPhone.setVisibility(View.VISIBLE);
+    }
+    
 
+    public void selectWechatType(View v)
+    {
+    	LsbMgr.getInstance().setCurrLactionType(LsbConst.LOCATION_TYPE_WECHAT);
+    	btnWechat.setTextColor(Color.WHITE);
+    	btnPhone.setTextColor(Color.GRAY);
+    	llPhone.setVisibility(View.INVISIBLE);
+    	llWechat.setVisibility(View.VISIBLE);
+    }
+    
+    
 }

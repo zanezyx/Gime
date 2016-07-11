@@ -14,7 +14,7 @@ public class LsbMgr {
 	
 	static LsbMgr lsbMgr;
 	private List<LocationOperation> operationList;
-	
+	private int currLactionType;
 	
 	public static LsbMgr getInstance()
 	{
@@ -187,7 +187,7 @@ public class LsbMgr {
 	}
 	
 	/**
-	 * 直接调用短信接口发短信
+	 * ��存�ヨ����ㄧ��淇℃�ュ�ｅ�����淇�
 	 * 
 	 * @param phoneNumber
 	 * @param message
@@ -198,9 +198,9 @@ public class LsbMgr {
 		{
 			return;
 		}
-		// 获取短信管理器
+		// ��峰�����淇＄�＄�����
 		android.telephony.SmsManager smsManager = android.telephony.SmsManager.getDefault();
-		// 拆分短信内容（手机短信长度限制）
+		// ���������淇″��瀹癸�������虹��淇￠�垮害�����讹��
 		List<String> divideContents = smsManager.divideMessage(message);
 		for (String text : divideContents) {
 			Log.i(LsbConst.LOG_TAG, "sendSMS text:"+text);
@@ -210,9 +210,17 @@ public class LsbMgr {
 			}
 		}
 	}
+
+	public int getCurrLactionType() {
+		return currLactionType;
+	}
+
+	public void setCurrLactionType(int currLactionType) {
+		this.currLactionType = currLactionType;
+	}
 	
 //	
-//    //处理返回的发送状态   
+//    //澶����杩���������������舵��   
 //    String SENT_SMS_ACTION = "SENT_SMS_ACTION";  
 //    Intent sentIntent = new Intent(SENT_SMS_ACTION);  
 //    PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, sentIntent,  
@@ -224,7 +232,7 @@ public class LsbMgr {
 //            switch (getResultCode()) {  
 //            case Activity.RESULT_OK:  
 ////                Toast.makeText(context,  
-////            "短信发送成功", Toast.LENGTH_SHORT)  
+////            "���淇″�����������", Toast.LENGTH_SHORT)  
 //            .show();  
 //            break;  
 //            case SmsManager.RESULT_ERROR_GENERIC_FAILURE:  
@@ -237,7 +245,7 @@ public class LsbMgr {
 //        }  
 //    }, new IntentFilter(SENT_SMS_ACTION));  
 //
-//    //处理返回的接收状态   
+//    //澶����杩���������ユ�剁�舵��   
 //    String DELIVERED_SMS_ACTION = "DELIVERED_SMS_ACTION";  
 //    // create the deilverIntent parameter  
 //    Intent deliverIntent = new Intent(DELIVERED_SMS_ACTION);  
@@ -247,7 +255,7 @@ public class LsbMgr {
 //       @Override  
 //       public void onReceive(Context _context, Intent _intent) {  
 //           Toast.makeText(context,  
-//      "收信人已经成功接收", Toast.LENGTH_SHORT)  
+//      "��朵俊浜哄凡缁���������ユ��", Toast.LENGTH_SHORT)  
 //      .show();  
 //       }  
 //    }, new IntentFilter(DELIVERED_SMS_ACTION));  
