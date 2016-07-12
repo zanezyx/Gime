@@ -3,13 +3,18 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context="com.gime.locationsb.MainActivity" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:layout_height="80dp"
+        android:background="#f7f7f7"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
 
         <Button
             android:id="@+id/btnPhone"
@@ -17,8 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#00000000"
-            android:text="@string/phone"
-            android:onClick="selectPhoneType" />
+            android:onClick="selectPhoneType"
+            android:text="@string/phone" />
 
         <Button
             android:id="@+id/btnWechat"
@@ -26,13 +31,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#00000000"
-            android:text="@string/wechat"
-            android:onClick="selectWechatType" />
+            android:onClick="selectWechatType"
+            android:text="@string/wechat" />
     </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="10dp" >
 
         <LinearLayout
@@ -45,78 +52,115 @@
                 android:id="@+id/tv1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/input_phone" />
+                android:text="@string/input_phone"
+                android:textColor="#000000" />
 
-            <EditText
-                android:id="@+id/et1"
-                android:layout_width="300dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxEms="20" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <EditText
+                    android:id="@+id/et1"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:maxEms="20"
+                    android:textColor="#000000" />
+
+                <ImageView
+                    android:id="@+id/ivSou"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="selectContact"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:src="@drawable/icon_suo" />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/input_wenhou" />
+                android:text="@string/input_wenhou"
+                android:textColor="#000000" />
 
             <EditText
                 android:id="@+id/et2"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:maxEms="40" />
+                android:maxEms="40"
+                android:textColor="#000000" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/llWechat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:visibility="gone" >
 
             <TextView
                 android:id="@+id/tv11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/input_wechat" />
+                android:text="@string/input_wechat"
+                android:textColor="#000000" />
 
             <EditText
                 android:id="@+id/et11"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:maxEms="20" />
+                android:maxEms="20"
+                android:textColor="#000000" />
 
             <TextView
+                android:id="@+id/tvInputWxMsg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/input_wenhou" />
+                android:text="@string/input_wenhou"
+                android:textColor="#000000" />
 
             <EditText
                 android:id="@+id/et21"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:maxEms="40" />
+                android:maxEms="40"
+                android:textColor="#000000" />
         </LinearLayout>
     </FrameLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:onClick="addLocationOperation"
-        android:text="@string/start_location" />
-
-    <TextView
-        android:id="@+id/tvlocationStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/location_result" />
-
-    <ListView
-        android:id="@+id/listView1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp" />
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape"
+            android:onClick="addLocationOperation"
+            android:text="@string/start_location_phone" />
+
+        <TextView
+            android:id="@+id/tvlocationStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/location_result"
+            android:textColor="#000000" />
+
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#f7f7f7"
+            android:layout_marginTop="20dp" />
+    </LinearLayout>
 
 </LinearLayout>
