@@ -16,6 +16,8 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import android.support.v4.app.Fragment;
 import android.annotation.SuppressLint;
@@ -69,7 +71,9 @@ public class MainActivity extends Activity {
 
 	private LinearLayout llPhone;
 	private LinearLayout llWechat;
-
+	private IWXAPI api;
+	
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -78,9 +82,9 @@ public class MainActivity extends Activity {
 		// SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		initView();
-
+		registerToWX();
 	}
-
+	
 	private Handler mHandler = new Handler() {
 		@SuppressLint("NewApi")
 		public void handleMessage(Message msg) {
@@ -465,4 +469,15 @@ public class MainActivity extends Activity {
         return result;  
     }  
   
+    
+	private void registerToWX()
+	{
+		api = WXAPIFactory.createWXAPI(this, LsbConst.WX_APP_ID, true);
+		api.registerApp(LsbConst.WX_APP_ID);
+	}
+	
+	private void sendTextToWxFriend()
+	{
+		
+	}
 }
