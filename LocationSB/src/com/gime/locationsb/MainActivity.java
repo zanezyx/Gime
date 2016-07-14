@@ -16,6 +16,9 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXTextObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
@@ -244,27 +247,26 @@ public class MainActivity extends Activity {
 		op.setWenhou(wenhou);
 
 		if (!LsbMgr.getInstance().checkIfContainOperation(op)) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this); // ���寰���版��������
-			builder.setTitle(getResources().getString(R.string.notice)); // 璁剧疆���棰�
-			builder.setMessage(getResources().getString(R.string.send_sms_text)); // 璁剧疆���瀹�
+			AlertDialog.Builder builder = new AlertDialog.Builder(this); 
+			builder.setTitle(getResources().getString(R.string.notice)); 
+			builder.setMessage(getResources().getString(R.string.send_sms_text)); 
 			builder.setPositiveButton(getResources().getString(R.string.ok),
-					new DialogInterface.OnClickListener() { // 璁剧疆纭�瀹�������
+					new DialogInterface.OnClickListener() { 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss(); // ��抽��dialog
+							dialog.dismiss(); 
 							sendLocationRequest(op);
 						}
 					});
 			builder.setNegativeButton(
 					getResources().getString(R.string.cancel),
-					new DialogInterface.OnClickListener() { // 璁剧疆���娑�������
+					new DialogInterface.OnClickListener() { 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
 						}
 					});
 
-			// �����伴�借�剧疆瀹����浜�锛����寤哄苟��剧ず��烘��
 			builder.create().show();
 
 		} else {
@@ -413,8 +415,7 @@ public class MainActivity extends Activity {
         case 1:  
             if (resultCode == RESULT_OK) {  
                 Uri contactData = data.getData();  
-                Cursor cursor = managedQuery(contactData, null, null, null,  
-                        null);  
+                Cursor cursor = managedQuery(contactData, null, null, null, null);  
                 cursor.moveToFirst();  
                 String num = this.getContactPhone(cursor);  
                 //show.setText("所选手机号为：" + num);  
@@ -470,14 +471,39 @@ public class MainActivity extends Activity {
     }  
   
     
+    
+  // weixin api use
+    
 	private void registerToWX()
 	{
 		api = WXAPIFactory.createWXAPI(this, LsbConst.WX_APP_ID, true);
 		api.registerApp(LsbConst.WX_APP_ID);
 	}
 	
-	private void sendTextToWxFriend()
+	private void sendTextToWxFriend(String text)
 	{
-		
+		WXTextObject textObj = new WXTextObject();
+		textObj.text = text;
+
+		WXMediaMessage msg = new WXMediaMessage();
+		msg.mediaObject = textObj;
+		// msg.title = "Will be ignored";
+		msg.description = text;
+		SendMessageToWX.Req req = new SendMessageToWX.Req();
+		req.transaction = buildTransaction("text"); 
+		req.message = msg;
+		req.scene = SendMessageToWX.Req.WXSceneSession;
+		api.sendReq(req);
+	}
+	
+	private String buildTransaction(final String type) {
+		return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
 	}
 }
+
+
+
+
+
+
+
