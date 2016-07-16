@@ -209,10 +209,20 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	
 	public void wechatLocationStart() {
+		String wenhou = etWechatContent.getText().toString();
 
+		if (wenhou == null || wenhou.equals("")) {
+			Toast.makeText(getApplicationContext(),
+					getResources().getString(R.string.input_wenhou1),
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+		sendTextToWxFriend(wenhou);
 	}
 
+	
 	public void phoneLocationStart() {
 
 		String phone = etPhone.getText().toString();
@@ -482,18 +492,28 @@ public class MainActivity extends Activity {
 	
 	private void sendTextToWxFriend(String text)
 	{
-		WXTextObject textObj = new WXTextObject();
-		textObj.text = text;
+		try {
+			WXTextObject textObj = new WXTextObject();
+			textObj.text = text;
 
-		WXMediaMessage msg = new WXMediaMessage();
-		msg.mediaObject = textObj;
-		// msg.title = "Will be ignored";
-		msg.description = text;
-		SendMessageToWX.Req req = new SendMessageToWX.Req();
-		req.transaction = buildTransaction("text"); 
-		req.message = msg;
-		req.scene = SendMessageToWX.Req.WXSceneSession;
-		api.sendReq(req);
+			WXMediaMessage msg = new WXMediaMessage();
+			msg.mediaObject = textObj;
+			msg.setThumbImage(null);
+			msg.mediaTagName = "aa";
+			msg.title="cc";
+			msg.messageAction="bb";
+			msg.messageExt="dd";
+			msg.description = text;
+			SendMessageToWX.Req req = new SendMessageToWX.Req();
+			req.transaction = buildTransaction("text"); 
+			req.message = msg;
+			req.scene = SendMessageToWX.Req.WXSceneSession;
+			api.sendReq(req);
+		} catch (Exception e) {
+			// TODO: handle exception
+			Log.i(LsbConst.LOG_TAG, "sendTextToWxFriend e:"+e.toString());
+		}
+
 	}
 	
 	private String buildTransaction(final String type) {

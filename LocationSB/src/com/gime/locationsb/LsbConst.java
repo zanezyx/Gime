@@ -23,5 +23,5 @@ public class LsbConst {
 	public final static  int NET_REQUEST_NONE = 0;
 	public final static  int NET_REQUEST_QUERY = 1;
 	public final static  int NET_REQUEST_SEND_OP = 2;
-	public static final String WX_APP_ID = "wxd930ea5d5a258f4f";
+	public static final String WX_APP_ID = "wx381a65a215eaf7b0";
 }
