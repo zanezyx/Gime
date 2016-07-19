@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:textColor="#FFFFFFFF"
+        android:textColor="#000000"
         android:textSize="19sp" />
 
     <TextView
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:textColor="#FFFFFFFF"
+        android:textColor="#000000"
         android:textSize="15sp" />
 
 </LinearLayout>

@@ -58,6 +58,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal" >
 
@@ -65,6 +66,7 @@
                     android:id="@+id/et1"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
+                    android:inputType="number"
                     android:textSize="16sp"
                     android:maxEms="20"
                     android:textColor="#000000" />
@@ -90,6 +92,7 @@
                 android:id="@+id/et2"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:textSize="16sp"
                 android:maxEms="40"
                 android:textColor="#000000" />
@@ -113,8 +116,9 @@
                 android:id="@+id/et11"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:textSize="16sp"
-                android:maxEms="20"
+                android:maxEms="50"
                 android:textColor="#000000" />
 
             <TextView
@@ -129,6 +133,7 @@
                 android:id="@+id/et21"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:textSize="16sp"
                 android:maxEms="40"
                 android:textColor="#000000" />
