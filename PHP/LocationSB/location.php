@@ -23,7 +23,7 @@ $operation->setLocationStatus(LOCATION_STATE_LOCATION_WAIT);*/
 
 
 $strsql = "select * from location_operation where number="."\"".$number."\""." and type=".$type ;
-#print $strsql;
+print $strsql;
 
 $result = mysql_db_query($mysql_database, $strsql, $conn);
 
@@ -34,7 +34,7 @@ if ($row) {
 	echo "exist";
 } else {
 	$strsql = "insert into location_operation(imei,type,number) values("."\"".$imei."\"".","."\"".$type."\"".","."\"".$number."\"".")";
-	//echo $strsql;
+	echo $strsql;
 	mysql_select_db($mysql_database, $conn);
 	if(mysql_query($strsql))
 	{

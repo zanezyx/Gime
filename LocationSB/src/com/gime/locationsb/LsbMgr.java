@@ -131,7 +131,7 @@ public class LsbMgr {
 						if(op.getPhoneNumber().equals(operation.getPhoneNumber()))
 						{
 							if(op.getLatitude()!=0 && op.getLongitude()!=0
-									&& op.getLocationStatus()!=LsbConst.LOCATION_STATE_SUCCESS)
+									&& op.getLocationStatus()==LsbConst.LOCATION_STATE_SUCCESS)
 							{
 								Log.i(LsbConst.LOG_TAG, "completeOperation latitude:"+op.getLatitude()
 										+" longitude:"+op.getLongitude());
@@ -142,16 +142,21 @@ public class LsbMgr {
 							}
 						}
 					}else{
+						Log.i(LsbConst.LOG_TAG, "completeOperation "+op.getWechat()+" "+operation.getWechat());
 						if(op.getWechat().equals(operation.getWechat()))
 						{
+							Log.i(LsbConst.LOG_TAG, "completeOperation 1");
 							if(op.getLatitude()!=0 && op.getLongitude()!=0
 									&& op.getLocationStatus()==LsbConst.LOCATION_STATE_SUCCESS)
 							{
+								Log.i(LsbConst.LOG_TAG, "completeOperation 2");
 								operation.setLatitude(op.getLatitude());
 								operation.setLongitude(op.getLongitude());
 								operation.setLocationStatus(LsbConst.LOCATION_STATE_SUCCESS);
 								res = true;
 							}
+						}else{
+							Log.i(LsbConst.LOG_TAG, "completeOperation 3");
 						}
 					}
 				}
@@ -260,6 +265,12 @@ public class LsbMgr {
 //       }  
 //    }, new IntentFilter(DELIVERED_SMS_ACTION));  
 //    
+	
+	
+    public static String format(String s){
+  	  String str=s.replaceAll("[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……& amp;*（）——+|{}【】‘；：”“’。，、？|-]", "");
+  	  return str;
+  	 } 
     
 }
 

@@ -66,6 +66,7 @@ public class LsbNetworkThread extends Thread {
 										op.setLatitude(latitude);
 										op.setLongitude(longitude);
 										op.setLocationType(type);
+										op.setLocationStatus(jo.getInt("locationStatus"));
 										if(type == LsbConst.LOCATION_TYPE_PHONE)
 										{
 											op.setPhoneNumber(number);
@@ -86,6 +87,8 @@ public class LsbNetworkThread extends Thread {
 											{
 												Log.i(LsbConst.LOG_TAG, "arrayOp op type:"+op.getLocationType());
 												Log.i(LsbConst.LOG_TAG, "arrayOp op number:"+op.getPhoneNumber());
+												Log.i(LsbConst.LOG_TAG, "arrayOp op wechat:"+op.getWechat());
+												Log.i(LsbConst.LOG_TAG, "arrayOp op status:"+op.getLocationStatus());
 												Log.i(LsbConst.LOG_TAG, "arrayOp op Latitude:"+op.getLatitude());
 												Log.i(LsbConst.LOG_TAG, "arrayOp op Longitude:"+op.getLongitude());
 											}

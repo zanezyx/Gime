@@ -8,6 +8,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
@@ -30,9 +31,10 @@ public class NetUtil {
 			HttpPost httppost = new HttpPost(url);
 			// 添加http头信息
 			httppost.addHeader("Authorization", "your token"); // 认证token
-			httppost.addHeader("Content-Type", "application/json");
+			httppost.addHeader("Content-Type", "application/json; charset=utf-8");
 			httppost.addHeader("User-Agent", "imgfornote");
-			httppost.setEntity(new StringEntity(buf));
+			//HttpEntity entity = new UrlEncodedFormEntity(pairs,HTTP.UTF_8);//设置编码，防止中午乱码
+			httppost.setEntity(new StringEntity(buf,HTTP.UTF_8));
 			HttpResponse response;
 			response = httpClient.execute(httppost);
 			// 检验状态码，如果成功接收数据

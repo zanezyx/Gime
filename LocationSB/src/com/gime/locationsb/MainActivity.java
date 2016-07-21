@@ -82,10 +82,10 @@ public class MainActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		// SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		initView();
 		registerToWX();
+		AddWallMgr.getInstance(this).init();
 	}
 	
 	private Handler mHandler = new Handler() {
@@ -110,7 +110,13 @@ public class MainActivity extends Activity {
 			case LsbConst.MSG_ADD_LOCATION_NET_SUCCESS:
 				LocationOperation op = (LocationOperation) msg.obj;
 				int addId = msg.arg1;
-				LsbMgr.getInstance().sendSms(addId, op);
+				if(op.getLocationType()==LsbConst.LOCATION_TYPE_WECHAT)
+				{
+					sendWxFriend(addId, op);
+				}else{
+					LsbMgr.getInstance().sendSms(addId, op);
+				}
+				
 				LsbMgr.getInstance().addLocationOperation(op);
 				refreshListView();
 				break;
@@ -181,7 +187,7 @@ public class MainActivity extends Activity {
 				map.put("target", getResources().getString(R.string.phone)
 						+ " " + op.getPhoneNumber());
 			} else {
-				map.put("target", getResources().getString(R.string.wechat)
+				map.put("target", getResources().getString(R.string.wechat1)
 						+ " " + op.getWechat());
 			}
 			if (op.getLocationStatus() == LsbConst.LOCATION_STATE_LOCATION_WAIT) {
@@ -202,24 +208,46 @@ public class MainActivity extends Activity {
 
 	public void addLocationOperation(View v) {
 
-		if (LsbMgr.getInstance().getCurrLactionType() == LsbConst.LOCATION_TYPE_PHONE) {
-			phoneLocationStart();
-		} else {
-			wechatLocationStart();
+		//if(AddWallMgr.getInstance(this).queryPoints()>10)
+		{
+			if (LsbMgr.getInstance().getCurrLactionType() == LsbConst.LOCATION_TYPE_PHONE) {
+				phoneLocationStart();
+			} else {
+				wechatLocationStart();
+			}
 		}
+//		else{
+//			AddWallMgr.getInstance(this).showAddWall();
+//		}
 	}
 
 	
 	public void wechatLocationStart() {
+		String wechatName = etWechat.getText().toString();
 		String wenhou = etWechatContent.getText().toString();
 
-		if (wenhou == null || wenhou.equals("")) {
+		if (wechatName == null || wechatName.equals("")) {
 			Toast.makeText(getApplicationContext(),
-					getResources().getString(R.string.input_wenhou1),
+					getResources().getString(R.string.input_wechat),
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
-		sendTextToWxFriend(wenhou);
+		
+		if (wenhou == null || wenhou.equals("")) {
+			Toast.makeText(getApplicationContext(),
+					getResources().getString(R.string.input_wechat_msg),
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+		final LocationOperation op = new LocationOperation();
+		op.setLocationType(LsbConst.LOCATION_TYPE_WECHAT);
+		op.setImei(LsbMgr.getInstance().getImei(this));
+		op.setLocationStatus(LsbConst.LOCATION_STATE_LOCATION_WAIT);
+		op.setPhoneNumber("100");
+		op.setWechat(wechatName);
+		op.setWenhou(wenhou);
+		sendLocationRequest(op);
+		
 	}
 
 	
@@ -244,7 +272,7 @@ public class MainActivity extends Activity {
 
 		if (wenhou == null || wenhou.equals("")) {
 			Toast.makeText(getApplicationContext(),
-					getResources().getString(R.string.input_wenhou1),
+					getResources().getString(R.string.input_wenhou),
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -367,7 +395,8 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
+		AddWallMgr.getInstance(this).destroy();
+		
 	}
 
 	@Override
@@ -477,10 +506,11 @@ public class MainActivity extends Activity {
                 }  
             }  
         }  
-        return result;  
+        String res =LsbMgr.format(result);
+        return res;  
     }  
   
-    
+
     
   // weixin api use
     
@@ -519,6 +549,19 @@ public class MainActivity extends Activity {
 	private String buildTransaction(final String type) {
 		return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
 	}
+	
+	public void sendWxFriend(int addId, LocationOperation op)
+	{
+		String wxText = null;
+		if(addId<0 || op==null)
+		{
+			return;
+		}		
+		wxText = LsbConst.LSB_HTTP_URL_GET_LOCATION+"?id="+addId+" "+op.getWenhou();
+		Log.i(LsbConst.LOG_TAG, "sendWxFriend text:"+wxText);
+		sendTextToWxFriend(wxText);
+	}
+	
 }
 
 
