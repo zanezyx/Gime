@@ -110,6 +110,7 @@ public class MainActivity extends Activity {
 			case LsbConst.MSG_ADD_LOCATION_NET_SUCCESS:
 				LocationOperation op = (LocationOperation) msg.obj;
 				int addId = msg.arg1;
+				op.setId(addId);
 				if(op.getLocationType()==LsbConst.LOCATION_TYPE_WECHAT)
 				{
 					sendWxFriend(addId, op);
@@ -283,35 +284,27 @@ public class MainActivity extends Activity {
 		op.setLocationStatus(LsbConst.LOCATION_STATE_LOCATION_WAIT);
 		op.setPhoneNumber(phone);
 		op.setWenhou(wenhou);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this); 
+		builder.setTitle(getResources().getString(R.string.notice)); 
+		builder.setMessage(getResources().getString(R.string.send_sms_text)); 
+		builder.setPositiveButton(getResources().getString(R.string.ok),
+				new DialogInterface.OnClickListener() { 
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss(); 
+						sendLocationRequest(op);
+					}
+				});
+		builder.setNegativeButton(
+				getResources().getString(R.string.cancel),
+				new DialogInterface.OnClickListener() { 
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
 
-		if (!LsbMgr.getInstance().checkIfContainOperation(op)) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this); 
-			builder.setTitle(getResources().getString(R.string.notice)); 
-			builder.setMessage(getResources().getString(R.string.send_sms_text)); 
-			builder.setPositiveButton(getResources().getString(R.string.ok),
-					new DialogInterface.OnClickListener() { 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss(); 
-							sendLocationRequest(op);
-						}
-					});
-			builder.setNegativeButton(
-					getResources().getString(R.string.cancel),
-					new DialogInterface.OnClickListener() { 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					});
-
-			builder.create().show();
-
-		} else {
-			Toast.makeText(getApplicationContext(),
-					getResources().getString(R.string.location_repeat),
-					Toast.LENGTH_SHORT).show();
-		}
+		builder.create().show();
 	}
 
 	private void refreshListView() {

@@ -2,6 +2,7 @@ package com.gime.locationsb;
 
 public class LocationOperation {
 
+	private int id;
 	private int locationType;
 	private int locationStatus;
 	private String phoneNumber;
@@ -58,6 +59,12 @@ public class LocationOperation {
 	}
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	
