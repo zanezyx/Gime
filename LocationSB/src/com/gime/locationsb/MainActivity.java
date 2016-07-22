@@ -504,6 +504,18 @@ public class MainActivity extends Activity {
     }  
   
 
+    public void clearLocationList(View view)
+    {
+    	if(LsbMgr.getInstance().getOperaionList().size()>0)
+    	{
+    		LsbMgr.getInstance().getOperaionList().clear();
+    		refreshListView();
+    	}else{
+			Toast.makeText(getApplicationContext(),
+					getResources().getString(R.string.list_empty),
+					Toast.LENGTH_SHORT).show();
+    	}
+    }
     
   // weixin api use
     
