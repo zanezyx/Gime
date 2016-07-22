@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textColor="#000000"
-        android:textSize="19sp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/tvStatus"

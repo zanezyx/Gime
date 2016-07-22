@@ -66,10 +66,10 @@
                     android:id="@+id/et1"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edittext"
                     android:inputType="number"
                     android:maxEms="20"
                     android:padding="5dp"
-                    android:background="@drawable/bg_edittext"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -89,21 +89,33 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/input_wenhou"
                 android:textColor="#000000" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal" >
-            <EditText
-                android:id="@+id/et2"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_edittext"
-                android:padding="5dp"
-                android:maxEms="40"
-                android:textColor="#000000"
-                android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/et2"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edittext"
+                    android:maxEms="40"
+                    android:padding="5dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/ivSou"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.6"
+                    android:onClick="toSelectMsgText"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:src="@drawable/select_menu" />
             </LinearLayout>
         </LinearLayout>
 
@@ -127,8 +139,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/bg_edittext"
-                android:padding="5dp"
                 android:maxEms="50"
+                android:padding="5dp"
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
@@ -146,8 +158,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/bg_edittext"
-                android:padding="5dp"
                 android:maxEms="40"
+                android:padding="5dp"
                 android:textColor="#000000"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -190,9 +202,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="#00000000"
-                android:textColor="#5bb64c"
                 android:onClick="clearLocationList"
-                android:text="@string/clear_list" />
+                android:text="@string/clear_list"
+                android:textColor="#5bb64c" />
         </RelativeLayout>
 
         <ListView

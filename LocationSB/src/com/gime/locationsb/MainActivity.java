@@ -517,6 +517,14 @@ public class MainActivity extends Activity {
     	}
     }
     
+    
+    public void toSelectMsgText(View view)
+    {
+    	
+    }
+    
+    
+    
   // weixin api use
     
 	private void registerToWX()
