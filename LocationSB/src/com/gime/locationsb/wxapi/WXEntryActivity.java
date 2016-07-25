@@ -85,7 +85,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
         api.handleIntent(intent, this);
 	}
 
-	// ΢�ŷ������󵽵���Ӧ��ʱ����ص����÷���
 	@Override
 	public void onReq(BaseReq req) {
 		
@@ -101,31 +100,31 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 		}
 	}
 
-	// ����Ӧ�÷��͵�΢�ŵ�����������Ӧ����ص����÷���
-	@Override
+		@Override
 	public void onResp(BaseResp resp) {
-//		int result = 0;
-//
-//		switch (resp.errCode) {
-//		case BaseResp.ErrCode.ERR_OK:
-//			result = "success";
-//			break;
-//		case BaseResp.ErrCode.ERR_USER_CANCEL:
-//			result = "";
-//			break;
-//		case BaseResp.ErrCode.ERR_AUTH_DENIED:
-//			result = R.string.errcode_deny;
-//			break;
-//		default:
-//			result = R.string.errcode_unknown;
-//			break;
-//		}
-//		
-//		Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+		String result = "";
+
+		switch (resp.errCode) {
+		case BaseResp.ErrCode.ERR_OK:
+			result = "success";
+			break;
+		case BaseResp.ErrCode.ERR_USER_CANCEL:
+			result = "";
+			break;
+		case BaseResp.ErrCode.ERR_AUTH_DENIED:
+			result = "auth_denied";
+			break;
+		default:
+			result = "";
+			break;
+		}
+		
+		//Toast.makeText(this, result, Toast.LENGTH_LONG).show();
 		Log.i(LsbConst.LOG_TAG, "resp errcode:"+resp.errCode);
 		finish();
 	}
 	
+		
 	private void goToGetMsg() {
 //		Intent intent = new Intent(this, GetFromWXActivity.class);
 //		intent.putExtras(getIntent());

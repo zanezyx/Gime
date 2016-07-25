@@ -3,6 +3,7 @@ package com.gime.locationsb;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -54,5 +55,10 @@ public class SelectTextActivity extends Activity {
 		finish();
 	}
 	
-	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// TODO Auto-generated method stub
+		finish();
+		return super.onTouchEvent(event);
+	}
 }

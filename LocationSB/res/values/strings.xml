@@ -22,6 +22,7 @@
     <string name="net_fail">网络连接失败</string>
     <string name="notice">温馨提示</string>
     <string name="send_sms_text">您即将发送一条短信给对方，让对方打开短信中的网址</string>
+    <string name="comfirm_del">确定清空所有定位记录?</string>
 	<string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="clear_list">清除列表</string>

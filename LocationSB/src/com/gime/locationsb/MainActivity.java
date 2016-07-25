@@ -23,6 +23,7 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -189,7 +190,7 @@ public class MainActivity extends Activity {
 				map.put("target", getResources().getString(R.string.phone)
 						+ " " + op.getPhoneNumber());
 			} else {
-				map.put("target", getResources().getString(R.string.wechat1)
+				map.put("target", getResources().getString(R.string.wechat)
 						+ " " + op.getWechat());
 			}
 			if (op.getLocationStatus() == LsbConst.LOCATION_STATE_LOCATION_WAIT) {
@@ -263,7 +264,8 @@ public class MainActivity extends Activity {
 
 			return;
 		}
-		if (phone.length() < 11) {
+		
+		if (!isMobileNO(phone)) {
 			Toast.makeText(getApplicationContext(),
 					getResources().getString(R.string.input_correct_phone),
 					Toast.LENGTH_SHORT).show();
@@ -514,14 +516,40 @@ public class MainActivity extends Activity {
 	}
 
 	public void clearLocationList(View view) {
-		if (LsbMgr.getInstance().getOperaionList().size() > 0) {
-			LsbMgr.getInstance().getOperaionList().clear();
-			refreshListView();
-		} else {
+		
+		if (LsbMgr.getInstance().getOperaionList().size() == 0) {
 			Toast.makeText(getApplicationContext(),
 					getResources().getString(R.string.list_empty),
 					Toast.LENGTH_SHORT).show();
+			return;
 		}
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(getResources().getString(R.string.notice));
+		builder.setMessage(getResources().getString(R.string.comfirm_del));
+		builder.setPositiveButton(getResources().getString(R.string.ok),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						if (LsbMgr.getInstance().getOperaionList().size() > 0) {
+							LsbMgr.getInstance().getOperaionList().clear();
+							refreshListView();
+						} else {
+							Toast.makeText(getApplicationContext(),
+									getResources().getString(R.string.list_empty),
+									Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
+		builder.setNegativeButton(getResources().getString(R.string.cancel),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+
+		builder.create().show();
 	}
 
 	
@@ -538,6 +566,22 @@ public class MainActivity extends Activity {
 		startActivityForResult(intent, REPUEST_CODE_SEL_WX_TEXT);
 	}
 	
+	
+	/**
+	 * 验证手机格式
+	 */
+	public static boolean isMobileNO(String mobiles) {
+		/*
+		 * 移动：134、135、136、137、138、139、150、151、157(TD)、158、159、187、188
+		 * 联通：130、131、132、152、155、156、185、186 电信：133、153、180、189、（1349卫通）
+		 * 总结起来就是第一位必定为1，第二位必定为3或5或8，其他位置的可以为0-9
+		 */
+		String telRegex = "[1][358]\\d{9}";// "[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
+		if (TextUtils.isEmpty(mobiles))
+			return false;
+		else
+			return mobiles.matches(telRegex);
+	}
 	
 	
 	// weixin api use
@@ -590,8 +634,6 @@ public class MainActivity extends Activity {
 		sendTextToWxFriend(wxText);
 	}
 
-	
 
-	    
 	    
 }

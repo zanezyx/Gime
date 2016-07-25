@@ -47,7 +47,7 @@ public class WelcomeActivity extends Activity {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			try {
-				Thread.sleep(500);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				return false;
 			}
