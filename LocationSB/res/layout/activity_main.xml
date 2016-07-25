@@ -108,13 +108,12 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/ivSou"
+                    android:id="@+id/ivMenu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:alpha="0.6"
                     android:onClick="toSelectMsgText"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
+                    android:padding="10dp"
                     android:src="@drawable/select_menu" />
             </LinearLayout>
         </LinearLayout>
@@ -152,16 +151,32 @@
                 android:text="@string/input_wenhou"
                 android:textColor="#000000" />
 
-            <EditText
-                android:id="@+id/et21"
-                android:layout_width="300dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/bg_edittext"
-                android:maxEms="40"
-                android:padding="5dp"
-                android:textColor="#000000"
-                android:textSize="16sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <EditText
+                    android:id="@+id/et21"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edittext"
+                    android:maxEms="40"
+                    android:padding="5dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/ivMenu1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.6"
+                    android:onClick="toSelectWxText"
+                    android:padding="10dp"
+                    android:src="@drawable/select_menu" />
+            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 

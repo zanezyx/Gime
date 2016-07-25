@@ -75,7 +75,9 @@ public class MainActivity extends Activity {
 	private LinearLayout llPhone;
 	private LinearLayout llWechat;
 	private IWXAPI api;
-	
+	public static final int REPUEST_CODE_CONTACTS = 0;
+	public static final int REPUEST_CODE_SEL_SMS_TEXT = 1;
+	public static final int REPUEST_CODE_SEL_WX_TEXT = 2;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -87,7 +89,7 @@ public class MainActivity extends Activity {
 		registerToWX();
 		AddWallMgr.getInstance(this).init();
 	}
-	
+
 	private Handler mHandler = new Handler() {
 		@SuppressLint("NewApi")
 		public void handleMessage(Message msg) {
@@ -111,13 +113,12 @@ public class MainActivity extends Activity {
 				LocationOperation op = (LocationOperation) msg.obj;
 				int addId = msg.arg1;
 				op.setId(addId);
-				if(op.getLocationType()==LsbConst.LOCATION_TYPE_WECHAT)
-				{
+				if (op.getLocationType() == LsbConst.LOCATION_TYPE_WECHAT) {
 					sendWxFriend(addId, op);
-				}else{
+				} else {
 					LsbMgr.getInstance().sendSms(addId, op);
 				}
-				
+
 				LsbMgr.getInstance().addLocationOperation(op);
 				refreshListView();
 				break;
@@ -209,7 +210,7 @@ public class MainActivity extends Activity {
 
 	public void addLocationOperation(View v) {
 
-		//if(AddWallMgr.getInstance(this).queryPoints()>10)
+		// if(AddWallMgr.getInstance(this).queryPoints()>10)
 		{
 			if (LsbMgr.getInstance().getCurrLactionType() == LsbConst.LOCATION_TYPE_PHONE) {
 				phoneLocationStart();
@@ -217,12 +218,11 @@ public class MainActivity extends Activity {
 				wechatLocationStart();
 			}
 		}
-//		else{
-//			AddWallMgr.getInstance(this).showAddWall();
-//		}
+		// else{
+		// AddWallMgr.getInstance(this).showAddWall();
+		// }
 	}
 
-	
 	public void wechatLocationStart() {
 		String wechatName = etWechat.getText().toString();
 		String wenhou = etWechatContent.getText().toString();
@@ -233,7 +233,7 @@ public class MainActivity extends Activity {
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
-		
+
 		if (wenhou == null || wenhou.equals("")) {
 			Toast.makeText(getApplicationContext(),
 					getResources().getString(R.string.input_wechat_msg),
@@ -248,10 +248,9 @@ public class MainActivity extends Activity {
 		op.setWechat(wechatName);
 		op.setWenhou(wenhou);
 		sendLocationRequest(op);
-		
+
 	}
 
-	
 	public void phoneLocationStart() {
 
 		String phone = etPhone.getText().toString();
@@ -284,20 +283,19 @@ public class MainActivity extends Activity {
 		op.setLocationStatus(LsbConst.LOCATION_STATE_LOCATION_WAIT);
 		op.setPhoneNumber(phone);
 		op.setWenhou(wenhou);
-		AlertDialog.Builder builder = new AlertDialog.Builder(this); 
-		builder.setTitle(getResources().getString(R.string.notice)); 
-		builder.setMessage(getResources().getString(R.string.send_sms_text)); 
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(getResources().getString(R.string.notice));
+		builder.setMessage(getResources().getString(R.string.send_sms_text));
 		builder.setPositiveButton(getResources().getString(R.string.ok),
-				new DialogInterface.OnClickListener() { 
+				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss(); 
+						dialog.dismiss();
 						sendLocationRequest(op);
 					}
 				});
-		builder.setNegativeButton(
-				getResources().getString(R.string.cancel),
-				new DialogInterface.OnClickListener() { 
+		builder.setNegativeButton(getResources().getString(R.string.cancel),
+				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
@@ -389,7 +387,7 @@ public class MainActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 		AddWallMgr.getInstance(this).destroy();
-		
+
 	}
 
 	@Override
@@ -426,115 +424,130 @@ public class MainActivity extends Activity {
 		btnPhone.setTextColor(Color.GRAY);
 		llPhone.setVisibility(View.INVISIBLE);
 		llWechat.setVisibility(View.VISIBLE);
-		tvInputWechat.setText(getResources().getString(R.string.input_wechat_msg));
+		tvInputWechat.setText(getResources().getString(
+				R.string.input_wechat_msg));
 		btnStart.setText(getResources()
 				.getString(R.string.start_location_wexin));
 	}
 
 	public void selectContact(View v) {
 
-		 Intent intent = new Intent(Intent.ACTION_PICK,  
-                 ContactsContract.Contacts.CONTENT_URI);  
-         MainActivity.this.startActivityForResult(intent, 1);  
+		Intent intent = new Intent(Intent.ACTION_PICK,
+				ContactsContract.Contacts.CONTENT_URI);
+		MainActivity.this.startActivityForResult(intent, REPUEST_CODE_CONTACTS);
 	}
 
-	
-    @Override  
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
-        // TODO Auto-generated method stub  
-        super.onActivityResult(requestCode, resultCode, data);  
-        switch (requestCode) {  
-        case 1:  
-            if (resultCode == RESULT_OK) {  
-                Uri contactData = data.getData();  
-                Cursor cursor = managedQuery(contactData, null, null, null, null);  
-                cursor.moveToFirst();  
-                String num = this.getContactPhone(cursor);  
-                //show.setText("所选手机号为：" + num);  
-                etPhone.setText(""+num);
-            }  
-            break;  
-  
-        default:  
-            break;  
-        }  
-    }  
-  
-    private String getContactPhone(Cursor cursor) {  
-        // TODO Auto-generated method stub  
-        int phoneColumn = cursor  
-                .getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER);  
-        int phoneNum = cursor.getInt(phoneColumn);  
-        String result = "";  
-        if (phoneNum > 0) {  
-            // 获得联系人的ID号  
-            int idColumn = cursor.getColumnIndex(ContactsContract.Contacts._ID);  
-            String contactId = cursor.getString(idColumn);  
-            // 获得联系人电话的cursor  
-            Cursor phone = getContentResolver().query(  
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,  
-                    null,  
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "="  
-                            + contactId, null, null);  
-            if (phone.moveToFirst()) {  
-                for (; !phone.isAfterLast(); phone.moveToNext()) {  
-                    int index = phone  
-                            .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);  
-                    int typeindex = phone  
-                            .getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);  
-                    int phone_type = phone.getInt(typeindex);  
-                    String phoneNumber = phone.getString(index);  
-                    result = phoneNumber;  
-//                  switch (phone_type) {//此处请看下方注释  
-//                  case 2:  
-//                      result = phoneNumber;  
-//                      break;  
-//  
-//                  default:  
-//                      break;  
-//                  }  
-                }  
-                if (!phone.isClosed()) {  
-                    phone.close();  
-                }  
-            }  
-        }  
-        String res =LsbMgr.format(result);
-        return res;  
-    }  
-  
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+		case REPUEST_CODE_CONTACTS:
+			if (resultCode == RESULT_OK) {
+				Uri contactData = data.getData();
+				Cursor cursor = managedQuery(contactData, null, null, null,
+						null);
+				cursor.moveToFirst();
+				String num = this.getContactPhone(cursor);
+				// show.setText("所选手机号为：" + num);
+				etPhone.setText("" + num);
+			}
+			break;
+		case REPUEST_CODE_SEL_SMS_TEXT:
+			if (resultCode == RESULT_OK) {
+				String text = data.getStringExtra("text");
+				etSmsContent.setText(text);
+			}
+			break;
+		case REPUEST_CODE_SEL_WX_TEXT:
+			if (resultCode == RESULT_OK) {
+				String text = data.getStringExtra("text");
+				etWechatContent.setText(text);
+			}
+			break;
+		default:
+			break;
+		}
+	}
 
-    public void clearLocationList(View view)
-    {
-    	if(LsbMgr.getInstance().getOperaionList().size()>0)
-    	{
-    		LsbMgr.getInstance().getOperaionList().clear();
-    		refreshListView();
-    	}else{
+	private String getContactPhone(Cursor cursor) {
+		// TODO Auto-generated method stub
+		int phoneColumn = cursor
+				.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER);
+		int phoneNum = cursor.getInt(phoneColumn);
+		String result = "";
+		if (phoneNum > 0) {
+			// 获得联系人的ID号
+			int idColumn = cursor.getColumnIndex(ContactsContract.Contacts._ID);
+			String contactId = cursor.getString(idColumn);
+			// 获得联系人电话的cursor
+			Cursor phone = getContentResolver().query(
+					ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+					null,
+					ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "="
+							+ contactId, null, null);
+			if (phone.moveToFirst()) {
+				for (; !phone.isAfterLast(); phone.moveToNext()) {
+					int index = phone
+							.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+					int typeindex = phone
+							.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
+					int phone_type = phone.getInt(typeindex);
+					String phoneNumber = phone.getString(index);
+					result = phoneNumber;
+					// switch (phone_type) {//此处请看下方注释
+					// case 2:
+					// result = phoneNumber;
+					// break;
+					//
+					// default:
+					// break;
+					// }
+				}
+				if (!phone.isClosed()) {
+					phone.close();
+				}
+			}
+		}
+		String res = LsbMgr.format(result);
+		return res;
+	}
+
+	public void clearLocationList(View view) {
+		if (LsbMgr.getInstance().getOperaionList().size() > 0) {
+			LsbMgr.getInstance().getOperaionList().clear();
+			refreshListView();
+		} else {
 			Toast.makeText(getApplicationContext(),
 					getResources().getString(R.string.list_empty),
 					Toast.LENGTH_SHORT).show();
-    	}
-    }
-    
-    
-    public void toSelectMsgText(View view)
-    {
-    	
-    }
-    
-    
-    
-  // weixin api use
-    
-	private void registerToWX()
-	{
+		}
+	}
+
+	
+	public void toSelectMsgText(View view) {
+		Intent intent = new Intent(MainActivity.this, SelectTextActivity.class);
+		//intent.putExtra("data", "传递给登录界面的数据");
+		startActivityForResult(intent, REPUEST_CODE_SEL_SMS_TEXT);
+	}
+
+	
+	public void toSelectWxText(View view) {
+		Intent intent = new Intent(MainActivity.this, SelectTextActivity.class);
+		//intent.putExtra("data", "传递给登录界面的数据");
+		startActivityForResult(intent, REPUEST_CODE_SEL_WX_TEXT);
+	}
+	
+	
+	
+	// weixin api use
+
+	private void registerToWX() {
 		api = WXAPIFactory.createWXAPI(this, LsbConst.WX_APP_ID, true);
 		api.registerApp(LsbConst.WX_APP_ID);
 	}
-	
-	private void sendTextToWxFriend(String text)
-	{
+
+	private void sendTextToWxFriend(String text) {
 		try {
 			WXTextObject textObj = new WXTextObject();
 			textObj.text = text;
@@ -543,43 +556,42 @@ public class MainActivity extends Activity {
 			msg.mediaObject = textObj;
 			msg.setThumbImage(null);
 			msg.mediaTagName = "aa";
-			msg.title="cc";
-			msg.messageAction="bb";
-			msg.messageExt="dd";
+			msg.title = "cc";
+			msg.messageAction = "bb";
+			msg.messageExt = "dd";
 			msg.description = text;
 			SendMessageToWX.Req req = new SendMessageToWX.Req();
-			req.transaction = buildTransaction("text"); 
+			req.transaction = buildTransaction("text");
 			req.message = msg;
 			req.scene = SendMessageToWX.Req.WXSceneSession;
 			api.sendReq(req);
 		} catch (Exception e) {
 			// TODO: handle exception
-			Log.i(LsbConst.LOG_TAG, "sendTextToWxFriend e:"+e.toString());
+			Log.i(LsbConst.LOG_TAG, "sendTextToWxFriend e:" + e.toString());
 		}
 
 	}
+
 	
 	private String buildTransaction(final String type) {
-		return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
+		return (type == null) ? String.valueOf(System.currentTimeMillis())
+				: type + System.currentTimeMillis();
 	}
+
 	
-	public void sendWxFriend(int addId, LocationOperation op)
-	{
+	public void sendWxFriend(int addId, LocationOperation op) {
 		String wxText = null;
-		if(addId<0 || op==null)
-		{
+		if (addId < 0 || op == null) {
 			return;
-		}		
-		wxText = LsbConst.LSB_HTTP_URL_GET_LOCATION+"?id="+addId+" "+op.getWenhou();
-		Log.i(LsbConst.LOG_TAG, "sendWxFriend text:"+wxText);
+		}
+		wxText = LsbConst.LSB_HTTP_URL_GET_LOCATION + "?id=" + addId + " "
+				+ op.getWenhou();
+		Log.i(LsbConst.LOG_TAG, "sendWxFriend text:" + wxText);
 		sendTextToWxFriend(wxText);
 	}
+
 	
+
+	    
+	    
 }
-
-
-
-
-
-
-

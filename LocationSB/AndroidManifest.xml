@@ -39,6 +39,12 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
         </activity>
         <activity
+            android:name="com.gime.locationsb.SelectTextActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
+        <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
             android:label="@string/app_name" >
