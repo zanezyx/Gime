@@ -27,6 +27,7 @@
     <string name="cancel">取消</string>
     <string name="clear_list">清除列表</string>
     <string name="list_empty">当前没有定位记录</string>
+    <string name="select_text">选择输入文字</string>
     <string name="select_text_1">点击打开网页并共享位置，我就知道你在哪里</string>
     <string name="select_text_2">点击打开网页并共享位置，帮我测试一下网页</string>
     <string name="select_text_3">点击打开网页并共享位置，你将会有惊喜</string>
