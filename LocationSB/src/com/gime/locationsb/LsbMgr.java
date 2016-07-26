@@ -3,18 +3,26 @@ package com.gime.locationsb;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class LsbMgr {
 	
+	public static final String LSB_CONFIG = "lsb_config";
+	public static final String ACTIVE_FLAG = "active";
+	public static final String TRY_FLAG = "try";
 	static LsbMgr lsbMgr;
 	private List<LocationOperation> operationList;
 	private int currLactionType;
+	private boolean isFreeVersion = true;
+	
 	
 	public static LsbMgr getInstance()
 	{
@@ -215,54 +223,88 @@ public class LsbMgr {
 		this.currLactionType = currLactionType;
 	}
 	
-//	
-//    //澶����杩���������������舵��   
-//    String SENT_SMS_ACTION = "SENT_SMS_ACTION";  
-//    Intent sentIntent = new Intent(SENT_SMS_ACTION);  
-//    PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, sentIntent,  
-//            0);  
-//    // register the Broadcast Receivers  
-//    context.registerReceiver(new BroadcastReceiver() {  
-//        @Override  
-//        public void onReceive(Context _context, Intent _intent) {  
-//            switch (getResultCode()) {  
-//            case Activity.RESULT_OK:  
-////                Toast.makeText(context,  
-////            "���淇″�����������", Toast.LENGTH_SHORT)  
-//            .show();  
-//            break;  
-//            case SmsManager.RESULT_ERROR_GENERIC_FAILURE:  
-//            break;  
-//            case SmsManager.RESULT_ERROR_RADIO_OFF:  
-//            break;  
-//            case SmsManager.RESULT_ERROR_NULL_PDU:  
-//            break;  
-//            }  
-//        }  
-//    }, new IntentFilter(SENT_SMS_ACTION));  
-//
-//    //澶����杩���������ユ�剁�舵��   
-//    String DELIVERED_SMS_ACTION = "DELIVERED_SMS_ACTION";  
-//    // create the deilverIntent parameter  
-//    Intent deliverIntent = new Intent(DELIVERED_SMS_ACTION);  
-//    PendingIntent deliverPI = PendingIntent.getBroadcast(context, 0,  
-//           deliverIntent, 0);  
-//    context.registerReceiver(new BroadcastReceiver() {  
-//       @Override  
-//       public void onReceive(Context _context, Intent _intent) {  
-//           Toast.makeText(context,  
-//      "��朵俊浜哄凡缁���������ユ��", Toast.LENGTH_SHORT)  
-//      .show();  
-//       }  
-//    }, new IntentFilter(DELIVERED_SMS_ACTION));  
-//    
-	
 	
     public static String format(String s){
   	  String str=s.replaceAll("[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……& amp;*（）——+|{}【】‘；：”“’。，、？|-]", "");
   	  return str;
   	 } 
     
+    
+	/**
+	 * 验证手机格式
+	 */
+	public boolean isMobileNO(String mobiles) {
+		/*
+		 * 移动：134、135、136、137、138、139、150、151、157(TD)、158、159、187、188
+		 * 联通：130、131、132、152、155、156、185、186 电信：133、153、180、189、（1349卫通）
+		 * 总结起来就是第一位必定为1，第二位必定为3或5或8，其他位置的可以为0-9
+		 */
+		String telRegex = "[1][358]\\d{9}";// "[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
+		if (TextUtils.isEmpty(mobiles))
+			return false;
+		else
+			return mobiles.matches(telRegex);
+	}
+	
+	
+	public boolean isAppActive(Context context) {
+		SharedPreferences sharedPreferences = context.getSharedPreferences(
+				LSB_CONFIG, Activity.MODE_PRIVATE);
+		// 使用getString方法获得value，注意第2个参数是value的默认值
+		boolean isActive = sharedPreferences.getBoolean(ACTIVE_FLAG, false);
+		return isActive;
+	}
+
+	public void setAppActive(Context context) {
+		SharedPreferences mySharedPreferences = context.getSharedPreferences(
+				LSB_CONFIG, Activity.MODE_PRIVATE);
+		// 实例化SharedPreferences.Editor对象（第二步）
+		SharedPreferences.Editor editor = mySharedPreferences.edit();
+		// 用putString的方法保存数据
+		editor.putBoolean(ACTIVE_FLAG, true);
+		// 提交当前数据
+		editor.commit();
+	}
+
+	
+	
+	public boolean isFirstTry(Context context) {
+		SharedPreferences sharedPreferences = context.getSharedPreferences(
+				LSB_CONFIG, Activity.MODE_PRIVATE);
+		// 使用getString方法获得value，注意第2个参数是value的默认值
+		boolean firstTry = sharedPreferences.getBoolean(TRY_FLAG, true);
+		return firstTry;
+	}
+
+	public void setFirstTryOver(Context context) {
+		SharedPreferences mySharedPreferences = context.getSharedPreferences(
+				LSB_CONFIG, Activity.MODE_PRIVATE);
+		// 实例化SharedPreferences.Editor对象（第二步）
+		SharedPreferences.Editor editor = mySharedPreferences.edit();
+		// 用putString的方法保存数据
+		editor.putBoolean(TRY_FLAG, false);
+		// 提交当前数据
+		editor.commit();
+	}
+	
+	public void setFirstTryTrue(Context context) {
+		SharedPreferences mySharedPreferences = context.getSharedPreferences(
+				LSB_CONFIG, Activity.MODE_PRIVATE);
+		// 实例化SharedPreferences.Editor对象（第二步）
+		SharedPreferences.Editor editor = mySharedPreferences.edit();
+		// 用putString的方法保存数据
+		editor.putBoolean(TRY_FLAG, true);
+		// 提交当前数据
+		editor.commit();
+	}
+	
+	public boolean isFreeVersion() {
+		return isFreeVersion;
+	}
+
+	public void setFreeVersion(boolean isFreeVersion) {
+		this.isFreeVersion = isFreeVersion;
+	}
 }
 
 

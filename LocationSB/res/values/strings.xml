@@ -32,4 +32,15 @@
     <string name="select_text_2">点击打开网页并共享位置，帮我测试一下网页</string>
     <string name="select_text_3">点击打开网页并共享位置，你将会有惊喜</string>
     <string name="select_text_4">清空</string>
+    <string name="sw_active">软件激活</string>
+    <string name="sw_active_tip">您还没有激活，只能试用一次，下载两个APP免费永久激活</string>
+    <string name="download_app">去下载</string>
+    <string name="quit">退出</string>
+    <string name="quit_comfirm_tip">退出可能清空定位记录，确定退出？</string>
 </resources>
+
+
+
+
+
+

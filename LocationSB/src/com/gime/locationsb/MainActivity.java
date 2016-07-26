@@ -51,6 +51,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,7 +73,7 @@ public class MainActivity extends Activity {
 	private Button btnWechat;
 	private TextView tvInputWechat = null;
 	private Button btnStart;
-
+	private ProgressBar progressBar;
 	private LinearLayout llPhone;
 	private LinearLayout llWechat;
 	private IWXAPI api;
@@ -109,6 +110,7 @@ public class MainActivity extends Activity {
 				Toast.makeText(getApplicationContext(),
 						getResources().getString(R.string.net_fail),
 						Toast.LENGTH_SHORT).show();
+				progressBar.setVisibility(View.GONE);
 				break;
 			case LsbConst.MSG_ADD_LOCATION_NET_SUCCESS:
 				LocationOperation op = (LocationOperation) msg.obj;
@@ -122,11 +124,17 @@ public class MainActivity extends Activity {
 
 				LsbMgr.getInstance().addLocationOperation(op);
 				refreshListView();
+				if(LsbMgr.getInstance().isFirstTry(MainActivity.this))
+				{
+					LsbMgr.getInstance().setFirstTryOver(MainActivity.this);
+				}
+				progressBar.setVisibility(View.GONE);
 				break;
 			case LsbConst.MSG_ADD_LOCATION_NET_EXIST:
 				Toast.makeText(getApplicationContext(),
 						getResources().getString(R.string.location_repeat),
 						Toast.LENGTH_SHORT).show();
+				progressBar.setVisibility(View.GONE);
 				break;
 			}
 			super.handleMessage(msg);
@@ -148,6 +156,7 @@ public class MainActivity extends Activity {
 		etPhone.clearFocus();
 		etWechat = (EditText) findViewById(R.id.et11);
 		etWechatContent = (EditText) findViewById(R.id.et21);
+		progressBar = (ProgressBar)findViewById(R.id.progressBar1);
 		mAdapter = new SimpleAdapter(this, getData(), R.layout.list_item,
 				new String[] { "target", "status" }, new int[] { R.id.tvTarget,
 						R.id.tvStatus });
@@ -211,17 +220,36 @@ public class MainActivity extends Activity {
 
 	public void addLocationOperation(View v) {
 
-		// if(AddWallMgr.getInstance(this).queryPoints()>10)
+		if(LsbMgr.getInstance().isAppActive(this) || LsbMgr.getInstance().isFreeVersion() 
+				|| LsbMgr.getInstance().isFirstTry(this))
 		{
 			if (LsbMgr.getInstance().getCurrLactionType() == LsbConst.LOCATION_TYPE_PHONE) {
 				phoneLocationStart();
 			} else {
 				wechatLocationStart();
 			}
+		}else{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(getResources().getString(R.string.sw_active));
+			builder.setMessage(getResources().getString(R.string.sw_active_tip));
+			builder.setPositiveButton(getResources().getString(R.string.download_app),
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+							AddWallMgr.getInstance(MainActivity.this).showAddWall();
+						}
+					});
+			builder.setNegativeButton(getResources().getString(R.string.cancel),
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+
+			builder.create().show();
 		}
-		// else{
-		// AddWallMgr.getInstance(this).showAddWall();
-		// }
 	}
 
 	public void wechatLocationStart() {
@@ -265,7 +293,7 @@ public class MainActivity extends Activity {
 			return;
 		}
 		
-		if (!isMobileNO(phone)) {
+		if (!LsbMgr.getInstance().isMobileNO(phone)) {
 			Toast.makeText(getApplicationContext(),
 					getResources().getString(R.string.input_correct_phone),
 					Toast.LENGTH_SHORT).show();
@@ -315,6 +343,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void sendLocationRequest(final LocationOperation op) {
+		progressBar.setVisibility(View.VISIBLE);
 		if (netThread == null) {
 			netThread = new LsbNetworkThread(this, mHandler);
 			netThread.start();
@@ -567,23 +596,6 @@ public class MainActivity extends Activity {
 	}
 	
 	
-	/**
-	 * 验证手机格式
-	 */
-	public static boolean isMobileNO(String mobiles) {
-		/*
-		 * 移动：134、135、136、137、138、139、150、151、157(TD)、158、159、187、188
-		 * 联通：130、131、132、152、155、156、185、186 电信：133、153、180、189、（1349卫通）
-		 * 总结起来就是第一位必定为1，第二位必定为3或5或8，其他位置的可以为0-9
-		 */
-		String telRegex = "[1][358]\\d{9}";// "[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
-		if (TextUtils.isEmpty(mobiles))
-			return false;
-		else
-			return mobiles.matches(telRegex);
-	}
-	
-	
 	// weixin api use
 
 	private void registerToWX() {
@@ -634,6 +646,30 @@ public class MainActivity extends Activity {
 		sendTextToWxFriend(wxText);
 	}
 
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(getResources().getString(R.string.notice));
+		builder.setMessage(getResources().getString(R.string.quit_comfirm_tip));
+		builder.setPositiveButton(getResources().getString(R.string.quit),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						MainActivity.super.finish();
+					}
+				});
+		builder.setNegativeButton(getResources().getString(R.string.cancel),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
 
+		builder.create().show();
+		
+	}
 	    
 }

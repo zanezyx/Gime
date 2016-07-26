@@ -1,15 +1,19 @@
 package com.gime.locationsb;
 
-import net.youmi.android.AdManager;
-import net.youmi.android.offers.OffersManager;
-import net.youmi.android.offers.PointsManager;
+import cn.waps.AppConnect;
+import cn.waps.AppListener;
+import cn.waps.UpdatePointsListener;
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.widget.LinearLayout;
 
-public class AddWallMgr {
+public class AddWallMgr implements UpdatePointsListener {
 	
 	private Context mContext;
 	static AddWallMgr mInstance = null;
+	public static final int PASS_POINTS = 100;
+	
 	
 	AddWallMgr(Context context) {
 		// TODO Auto-generated constructor stub
@@ -28,36 +32,60 @@ public class AddWallMgr {
 	
 	public void init()
 	{
-		AdManager.getInstance(mContext).init("appId", "appSecret", true);
-		OffersManager.getInstance(mContext).onAppLaunch();
+		AppConnect.getInstance("APP_ID","APP_PID",mContext);
+
 	}
 	
 	public void destroy()
 	{
-		OffersManager.getInstance(mContext).onAppExit();
-	}
-	
+		AppConnect.getInstance(mContext).close();
 
-	public void showAddWall()
-	{
-		OffersManager.getInstance(mContext).showOffersWall();
-		//OffersManager.getInstance(Context context).showOffersWall(Interface_ActivityListener listener);
+	}
+	
+	public void showAddWall() {
+		
+		// 设置关闭积分墙癿监听接口,必须在showOffers接口之前调用
+		AppConnect.getInstance(mContext).setOffersCloseListener(
+				new AppListener() {
+					@Override
+					public void onOffersClose() {
+						// TODO 关闭积分墙时癿操作代码
+						Log.i(LsbConst.LOG_TAG, "waps add wall closed");
+						queryPoints();
+					}
+				});
+		AppConnect.getInstance(mContext).showOffers(mContext);
 	}
 	
 	
-//	public interface Interface_ActivityListener {
-//
-//	    /**
-//	     * 全屏积分墙Activity 调用onDestory的时候回调，执行在ui线程中
-//	     */
-//	    public void onActivityDestroy(Context context);
-//	}
-	
-	public float queryPoints()
+	public void queryPoints()
 	{
-		float pointsBalance = PointsManager.getInstance(mContext).queryPoints();
-		Log.i(LsbConst.LOG_TAG, "query youmi add points:"+pointsBalance);
-		return pointsBalance;
+		AppConnect.getInstance(mContext).getPoints(this);
+
+	}
+
+	@Override
+	public void getUpdatePoints(String arg0, int arg1) {
+		// TODO Auto-generated method stub
+		Log.i(LsbConst.LOG_TAG, "waps add update points "+arg0+":"+arg1);
+		if(arg1>PASS_POINTS)
+		{
+			Log.i(LsbConst.LOG_TAG, "set app active");
+			LsbMgr.getInstance().setAppActive(mContext);
+		}
+	}
+
+	@Override
+	public void getUpdatePointsFailed(String arg0) {
+		// TODO Auto-generated method stub
+		Log.i(LsbConst.LOG_TAG, "waps add update points failed");
+	}
+	
+	public void showBannerAdd(Activity activity)
+	{
+		LinearLayout adlayout =(LinearLayout)activity.findViewById(R.id.AdLinearLayout);
+		AppConnect.getInstance(mContext).showBannerAd( mContext, adlayout);
+
 	}
 	
 }
