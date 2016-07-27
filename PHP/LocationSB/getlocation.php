@@ -35,8 +35,6 @@
 //    			});
 				//window.alert("success");
         	   sendPositionToServer(position);
-
-        	   
            }
 
            function sendPositionToServer(position){
@@ -44,14 +42,9 @@
                //纬度
                var latitude = position.coords.latitude;
 			   var locationId = $_GET['id'];
-//        	   <?php
-//        	   $id=$_REQUEST["id"];
-//        	   echo
-//        	   $name;
-//        	   ?>;
                var xhr = new XMLHttpRequest();
                var url = "sendLocation.php?id="+locationId+"&latitude="+latitude+"&longitude="+longitude;
-               window.alert(url);
+//               window.alert(url);
                var res = xhr.open('GET', url, false);
                xhr.send(null);
             }
