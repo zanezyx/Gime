@@ -32,7 +32,7 @@ public class AddWallMgr implements UpdatePointsListener {
 	
 	public void init()
 	{
-		AppConnect.getInstance("APP_ID","APP_PID",mContext);
+		AppConnect.getInstance(mContext);
 
 	}
 	

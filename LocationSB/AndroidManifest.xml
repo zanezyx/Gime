@@ -16,6 +16,12 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="5wmieHtS150i3k5155TeXbdW5n9qYtXL" />
+        <meta-data
+            android:name="APP_ID"
+            android:value="d1f0c55873bc89fc22a086e0f6bb93b2" />
+        <meta-data
+            android:name="APP_PID"
+            android:value="default" />
 
         <activity
             android:name="com.gime.locationsb.WelcomeActivity"
@@ -49,7 +55,6 @@
             android:exported="true"
             android:label="@string/app_name" >
         </activity>
-
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
