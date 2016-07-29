@@ -196,11 +196,11 @@ public class MainActivity extends Activity {
 		for (LocationOperation op : opList) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			if (op.getLocationType() == LsbConst.LOCATION_TYPE_PHONE) {
-				map.put("target", getResources().getString(R.string.phone)
-						+ " " + op.getPhoneNumber());
+				map.put("target", getResources().getString(R.string.phone_friend)
+						+ op.getPhoneNumber());
 			} else {
-				map.put("target", getResources().getString(R.string.wechat)
-						+ " " + op.getWechat());
+				map.put("target", getResources().getString(R.string.wechat_friend)
+						+ op.getWechat());
 			}
 			if (op.getLocationStatus() == LsbConst.LOCATION_STATE_LOCATION_WAIT) {
 				map.put("status",

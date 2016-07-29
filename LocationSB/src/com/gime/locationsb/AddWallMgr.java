@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class AddWallMgr implements UpdatePointsListener {
 	
@@ -72,6 +73,9 @@ public class AddWallMgr implements UpdatePointsListener {
 		{
 			Log.i(LsbConst.LOG_TAG, "set app active");
 			LsbMgr.getInstance().setAppActive(mContext);
+			Toast.makeText(mContext,
+					mContext.getResources().getString(R.string.active_susccess),
+					Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -83,8 +87,8 @@ public class AddWallMgr implements UpdatePointsListener {
 	
 	public void showBannerAdd(Activity activity)
 	{
-		LinearLayout adlayout =(LinearLayout)activity.findViewById(R.id.AdLinearLayout);
-		AppConnect.getInstance(mContext).showBannerAd( mContext, adlayout);
+//		LinearLayout adlayout =(LinearLayout)activity.findViewById(R.id.AdLinearLayout);
+//		AppConnect.getInstance(mContext).showBannerAd( mContext, adlayout);
 
 	}
 	

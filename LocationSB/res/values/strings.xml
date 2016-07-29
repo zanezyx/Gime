@@ -12,11 +12,13 @@
     <string name="start_location_wexin">发送定位信息</string>
     <string name="location_result">查询定位列表</string>
     <string name="input_correct_phone">请输入正确的手机号码</string>
-    <string name="location_wait">正在定位，请稍候</string>
+    <string name="location_wait">正在定位,请稍候</string>
     <string name="location_suscess">定位成功,点击查看</string>
     <string name="location_repeat">该号码已添加定位，请勿重复添加</string>
     <string name="phone">手机定位</string>
     <string name="wechat">微信定位</string>
+    <string name="phone_friend">手机号码：</string>
+    <string name="wechat_friend">微信好友：</string>
     <string name="wechat1">微信</string>
     <string name="please_wait">定位还没有成功，请稍候</string>
     <string name="net_fail">网络连接失败</string>
@@ -37,6 +39,7 @@
     <string name="download_app">去下载</string>
     <string name="quit">退出</string>
     <string name="quit_comfirm_tip">退出可能清空定位记录，确定退出？</string>
+    <string name="active_susccess">激活成功</string>
 </resources>
 
 

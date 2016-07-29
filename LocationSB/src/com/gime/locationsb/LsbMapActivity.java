@@ -80,7 +80,7 @@ public class LsbMapActivity extends Activity {
 		latx+=0.00290532687912;
 		laty+=0.01074687519;
 		setView();
-		AddWallMgr.getInstance(this).showBannerAdd(this);
+//		AddWallMgr.getInstance(this).showBannerAdd(this);
 	}
 
 
