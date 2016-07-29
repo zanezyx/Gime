@@ -7,6 +7,12 @@ public class LsbConst {
 	public final static  String LSB_HTTP_URL_QUERY = "http://120.25.197.60/LocationSB/query.php";
 	public final static  String LSB_HTTP_URL_GET_LOCATION = "http://120.25.197.60/LocationSB/getlocation.php";
 	
+	//debug
+//	public final static  String LSB_HTTP_URL_SEND_OP = "http://192.168.0.5/LocationSB/location.php";
+//	public final static  String LSB_HTTP_URL_QUERY = "http://192.168.0.5/LocationSB/query.php";
+//	public final static  String LSB_HTTP_URL_GET_LOCATION = "http://192.168.0.5/LocationSB/getlocation.php";
+	
+	
 	public final static  int LOCATION_TYPE_PHONE = 0;
 	public final static  int LOCATION_TYPE_WECHAT = 1;
 	

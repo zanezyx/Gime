@@ -86,6 +86,6 @@
    </script>
 </head>
 <body>
-
+<img src="./img/qixi.jpg"  alt="七夕快乐" />
 </body>
 </html>
