@@ -21,7 +21,7 @@ public class LsbMgr {
 	static LsbMgr lsbMgr;
 	private List<LocationOperation> operationList;
 	private int currLactionType;
-	private boolean isFreeVersion = true;
+	private boolean isFreeVersion = false;
 	
 	
 	public static LsbMgr getInstance()
@@ -83,6 +83,20 @@ public class LsbMgr {
 		}
 		return false;
 	}
+	
+	public List<LocationOperation> getWaitingLocationOperations()
+	{
+		List<LocationOperation> opList = new ArrayList<LocationOperation>();
+		for(LocationOperation op:operationList)
+		{
+			if(op.getLocationStatus()==LsbConst.LOCATION_STATE_LOCATION_WAIT)
+			{
+				opList.add(op);
+			}
+		}
+		return opList;
+	}
+	
 	
 	public String getImei(Context context)
 	{

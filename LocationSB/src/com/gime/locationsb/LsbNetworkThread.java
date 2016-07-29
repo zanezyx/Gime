@@ -1,6 +1,7 @@
 package com.gime.locationsb;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,8 +38,8 @@ public class LsbNetworkThread extends Thread {
 		{
 			if(currNetRequestType==LsbConst.NET_REQUEST_QUERY)
 			{
-				Log.i(LsbConst.LOG_TAG, "net thread running NET_REQUEST_QUERY");
-				currSendBuf = LsbMgr.getInstance().getImei(mContext);
+				currSendBuf = genIdsJsonArryString();
+				Log.i(LsbConst.LOG_TAG, "net thread running NET_REQUEST_QUERY send buf:"+currSendBuf);
 				if(currSendBuf!=null)
 				{
 					if(LsbMgr.getInstance().hasUncompletedOperation())
@@ -130,7 +131,7 @@ public class LsbNetworkThread extends Thread {
 				}
 			}
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -151,5 +152,34 @@ public class LsbNetworkThread extends Thread {
 		this.jObjOperation = jObjOperation;
 	}
 	
-	
+	public String genIdsJsonArryString()
+	{
+		List<LocationOperation> opList = LsbMgr.getInstance().getWaitingLocationOperations();
+		if(opList!=null && opList.size()>0)
+		{
+			JSONArray jarray = new JSONArray();
+			for(LocationOperation op:opList)
+			{
+//				try {
+//					JSONObject jobj = new JSONObject();
+//					jobj.put("id", op.getId());
+//					jarray
+//				} catch (JSONException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+				jarray.put(op.getId());
+			}
+			JSONObject jobj = new JSONObject();
+			try {
+				jobj.put("imei", LsbMgr.getInstance().getImei(mContext));
+				jobj.put("ids", jarray);
+				return jobj.toString();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
 }
