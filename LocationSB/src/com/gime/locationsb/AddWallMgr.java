@@ -5,6 +5,8 @@ import cn.waps.AppListener;
 import cn.waps.UpdatePointsListener;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -14,8 +16,11 @@ public class AddWallMgr implements UpdatePointsListener {
 	private Context mContext;
 	static AddWallMgr mInstance = null;
 	public static final int PASS_POINTS = 100;
-	
-	
+	private int mPoints = 0;
+	private Handler mHandler;
+	private boolean needShowPoint = false;
+
+
 	AddWallMgr(Context context) {
 		// TODO Auto-generated constructor stub
 		this.mContext = context;
@@ -52,30 +57,42 @@ public class AddWallMgr implements UpdatePointsListener {
 					public void onOffersClose() {
 						// TODO 关闭积分墙时癿操作代码
 						Log.i(LsbConst.LOG_TAG, "waps add wall closed");
-						queryPoints();
+						queryPoints(true);
 					}
 				});
 		AppConnect.getInstance(mContext).showOffers(mContext);
 	}
 	
 	
-	public void queryPoints()
+	public void queryPoints(boolean needShow)
 	{
+		needShowPoint = needShow;
 		AppConnect.getInstance(mContext).getPoints(this);
-
 	}
 
+	
 	@Override
 	public void getUpdatePoints(String arg0, int arg1) {
 		// TODO Auto-generated method stub
 		Log.i(LsbConst.LOG_TAG, "waps add update points "+arg0+":"+arg1);
-		if(arg1>PASS_POINTS)
+		mPoints = arg1;
+		if(mHandler!=null)
 		{
-			Log.i(LsbConst.LOG_TAG, "set app active");
-			LsbMgr.getInstance().setAppActive(mContext);
-			Toast.makeText(mContext,
-					mContext.getResources().getString(R.string.active_susccess),
-					Toast.LENGTH_SHORT).show();
+			if(needShowPoint)
+			{
+				Message message = new Message();
+				message.what = LsbConst.MSG_SHOW_POINTS;
+				message.arg1 = arg1;
+				mHandler.sendMessage(message);
+			}
+
+			if(arg1>PASS_POINTS)
+			{
+				Message message1 = new Message();
+				message1.what = LsbConst.MSG_ACTIVE_APP_SUCCESS;
+				mHandler.sendMessage(message1);
+				spendPoints(PASS_POINTS);
+			}
 		}
 	}
 
@@ -92,6 +109,33 @@ public class AddWallMgr implements UpdatePointsListener {
 
 	}
 	
+	public void spendPoints(int points)
+	{
+		AppConnect.getInstance(mContext).spendPoints(points,this);
+	}
+	
+	public void checkUpdate()
+	{
+		AppConnect.getInstance(mContext).checkUpdate(mContext);
+	}
+	
+	public int getmPoints() {
+		return mPoints;
+	}
+
+	
+	
+	public void setmPoints(int mPoints) {
+		this.mPoints = mPoints;
+	}
+	
+	public Handler getmHandler() {
+		return mHandler;
+	}
+
+	public void setmHandler(Handler mHandler) {
+		this.mHandler = mHandler;
+	}
 }
 
 

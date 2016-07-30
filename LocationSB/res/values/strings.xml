@@ -7,7 +7,7 @@
     <string name="input_phone">请输入对方的手机号码</string>
     <string name="input_wechat">请输入对方的名字</string>
     <string name="input_wenhou">请输入短信内容,让对方点击链接</string>
-    <string name="input_wechat_msg">请输入微信对话内容,让对方点击链接</string>
+    <string name="input_wechat_msg">请输入微信对话内容,让对方点击网址链接</string>
     <string name="start_location_phone">发送定位短信</string>
     <string name="start_location_wexin">发送定位信息</string>
     <string name="location_result">查询定位列表</string>
@@ -34,12 +34,15 @@
     <string name="select_text_2">点击打开网页并共享位置，帮我测试一下网页</string>
     <string name="select_text_3">点击打开网页并共享位置，你将会有惊喜</string>
     <string name="select_text_4">清空</string>
-    <string name="sw_active">软件激活</string>
-    <string name="sw_active_tip">您还没有激活，只能试用一次，下载两个APP免费永久激活</string>
-    <string name="download_app">去下载</string>
+    <string name="sw_active">软件免费激活</string>
+    <string name="sw_active_tip">您还没有激活，激活需要100积分，您当前的积分为</string>
+    <string name="sw_active_tip1">您还没有激活，激活需要100积分，您当前的积分还没达到100</string>
+    <string name="download_app">获取积分</string>
     <string name="quit">退出</string>
     <string name="quit_comfirm_tip">退出可能清空定位记录，确定退出？</string>
     <string name="active_susccess">激活成功</string>
+    <string name="your_points">您当前的积分为</string>
+    <string name="app_wall">热门应用推荐</string>
 </resources>
 
 

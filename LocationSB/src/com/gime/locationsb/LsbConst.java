@@ -25,6 +25,8 @@ public class LsbConst {
 	public final static  int MSG_ADD_LOCATION_NET_SUCCESS = 1003;
 	public final static  int MSG_ADD_LOCATION_NET_EXIST = 1004;
 	public final static  int MSG_QUERY_LOCATION_NET_FAIL = 1005;
+	public final static  int MSG_ACTIVE_APP_SUCCESS = 1006;
+	public final static  int MSG_SHOW_POINTS = 1007;
 	
 	public final static  int NET_REQUEST_NONE = 0;
 	public final static  int NET_REQUEST_QUERY = 1;

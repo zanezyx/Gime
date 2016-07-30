@@ -90,6 +90,9 @@ public class MainActivity extends Activity {
 		initView();
 		registerToWX();
 		AddWallMgr.getInstance(this).init();
+		AddWallMgr.getInstance(this).queryPoints(false);
+		AddWallMgr.getInstance(this).setmHandler(mHandler);
+//		AddWallMgr.getInstance(this).checkUpdate();
 	}
 
 	private Handler mHandler = new Handler() {
@@ -135,6 +138,19 @@ public class MainActivity extends Activity {
 						getResources().getString(R.string.location_repeat),
 						Toast.LENGTH_SHORT).show();
 				progressBar.setVisibility(View.GONE);
+				break;
+			case LsbConst.MSG_ACTIVE_APP_SUCCESS:
+				Log.i(LsbConst.LOG_TAG, "set app active");
+				LsbMgr.getInstance().setAppActive(MainActivity.this);
+				Toast.makeText(MainActivity.this,
+						MainActivity.this.getResources().getString(R.string.active_susccess),
+						Toast.LENGTH_SHORT).show();
+				break;
+			case LsbConst.MSG_SHOW_POINTS:
+				int points = msg.arg1;
+				String tip = MainActivity.this.getResources().getString(R.string.your_points)+points;
+				Toast.makeText(MainActivity.this,
+						tip,Toast.LENGTH_SHORT).show();
 				break;
 			}
 			super.handleMessage(msg);
@@ -229,9 +245,17 @@ public class MainActivity extends Activity {
 				wechatLocationStart();
 			}
 		}else{
+			String sMessage = "";
+			int points = AddWallMgr.getInstance(this).getmPoints();
+			if(points==0)
+			{
+				sMessage = getResources().getString(R.string.sw_active_tip1);
+			}else{
+				sMessage = getResources().getString(R.string.sw_active_tip)+""+points;
+			}
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(getResources().getString(R.string.sw_active));
-			builder.setMessage(getResources().getString(R.string.sw_active_tip));
+			builder.setMessage(sMessage);
 			builder.setPositiveButton(getResources().getString(R.string.download_app),
 					new DialogInterface.OnClickListener() {
 						@Override
@@ -313,26 +337,27 @@ public class MainActivity extends Activity {
 		op.setLocationStatus(LsbConst.LOCATION_STATE_LOCATION_WAIT);
 		op.setPhoneNumber(phone);
 		op.setWenhou(wenhou);
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(getResources().getString(R.string.notice));
-		builder.setMessage(getResources().getString(R.string.send_sms_text));
-		builder.setPositiveButton(getResources().getString(R.string.ok),
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						sendLocationRequest(op);
-					}
-				});
-		builder.setNegativeButton(getResources().getString(R.string.cancel),
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-
-		builder.create().show();
+		sendLocationRequest(op);
+//		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//		builder.setTitle(getResources().getString(R.string.notice));
+//		builder.setMessage(getResources().getString(R.string.send_sms_text));
+//		builder.setPositiveButton(getResources().getString(R.string.ok),
+//				new DialogInterface.OnClickListener() {
+//					@Override
+//					public void onClick(DialogInterface dialog, int which) {
+//						dialog.dismiss();
+//						sendLocationRequest(op);
+//					}
+//				});
+//		builder.setNegativeButton(getResources().getString(R.string.cancel),
+//				new DialogInterface.OnClickListener() {
+//					@Override
+//					public void onClick(DialogInterface dialog, int which) {
+//						dialog.dismiss();
+//					}
+//				});
+//
+//		builder.create().show();
 	}
 
 	private void refreshListView() {
@@ -596,6 +621,17 @@ public class MainActivity extends Activity {
 	}
 	
 	
+	public void toAppWall(View view)
+	{
+		try {
+			AddWallMgr.getInstance(MainActivity.this).showAddWall();
+		} catch (Exception e) {
+			// TODO: handle exception
+			Log.i(LsbConst.LOG_TAG, "toAppWall e:"+e.toString());
+		}
+		
+	}
+	
 	// weixin api use
 
 	private void registerToWX() {
@@ -658,6 +694,7 @@ public class MainActivity extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 						MainActivity.super.finish();
+						android.os.Process.killProcess(android.os.Process.myPid());  
 					}
 				});
 		builder.setNegativeButton(getResources().getString(R.string.cancel),
