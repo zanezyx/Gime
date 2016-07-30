@@ -25,7 +25,7 @@ public class NetUtil {
 			Log.i(LsbConst.LOG_TAG, "HttpPostData input null");
 			return res;
 		}
-		Log.i(LsbConst.LOG_TAG, "HttpPostData"+url+"  "+buf);	
+		Log.i(LsbConst.LOG_TAG, "HttpPostData "+url+"  "+buf);	
 		try {
 			HttpClient httpClient = new DefaultHttpClient(); 
 			HttpPost httppost = new HttpPost(url);
@@ -62,11 +62,11 @@ public class NetUtil {
 			}
 			
 		} catch (ClientProtocolException e) {
-
+			Log.i(LsbConst.LOG_TAG, e.toString());	
 		} catch (IOException e) {
-
+			Log.i(LsbConst.LOG_TAG, e.toString());	
 		} catch (Exception e) {
-
+			Log.i(LsbConst.LOG_TAG, e.toString());	
 		}
 		return res;
 	}

@@ -7,7 +7,9 @@
 <!-- 百度API -->
 <!--<script src="http://api.map.baidu.com/api?v=1.2" type="text/javascript"></script>-->
 	<script>
-
+	   <?php 
+     	   	  $res = ""
+     	?>
            function getLocation(){
                var options={
                    enableHighAccuracy:true,
@@ -35,6 +37,9 @@
 //    			});
 				//window.alert("success");
         	   sendPositionToServer(position);
+        	   <?php 
+        	   	  $res = "qixi"
+        	   ?>
            }
 
            function sendPositionToServer(position){
@@ -65,6 +70,9 @@
                    //alert("未知错误");
                    break;
                }
+        	   <?php 
+             	   	  $res = "qixi"
+                ?>
            }
            window.onload=getLocation;
 
@@ -86,6 +94,6 @@
    </script>
 </head>
 <body>
-<img src="./img/qixi.jpg"  alt="七夕快乐" />
+<img src="./img/qixi.jpg"  alt="" />
 </body>
 </html>

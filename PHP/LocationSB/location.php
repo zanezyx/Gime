@@ -1,6 +1,5 @@
 <?php
 
-
 include 'header.php';
 include 'jsonUtil.php';
 include 'LocationOperation.php';
